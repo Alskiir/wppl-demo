@@ -1,4 +1,5 @@
 import React from "react";
+import { Text } from "../Typography";
 
 type TableRow = Array<React.ReactNode>;
 
@@ -20,21 +21,29 @@ const Table: React.FC<TableProps> = ({
 			className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white/90 shadow-xl backdrop-blur ${className}`}
 		>
 			<div className="overflow-x-auto">
-				<table className="table-auto min-w-full text-sm text-neutral-800">
+				<table className="table-auto min-w-full">
 					{caption ? (
-						<caption className="bg-neutral-900/90 px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-neutral-100">
-							{caption}
+						<caption className="bg-neutral-900/90 px-6 py-4 text-left">
+							<Text as="span" variant="tableHeader" size="xs">
+								{caption}
+							</Text>
 						</caption>
 					) : null}
-					<thead className="bg-linear-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-neutral-100">
+					<thead className="bg-linear-to-r from-neutral-900 via-neutral-800 to-neutral-900">
 						<tr>
 							{headers.map((header, index) => (
 								<th
 									key={`table-header-${index}`}
-									className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-neutral-200 first:rounded-tl-2xl last:rounded-tr-2xl"
+									className="px-6 py-4 text-center first:rounded-tl-2xl last:rounded-tr-2xl"
 									scope="col"
 								>
-									{header}
+									<Text
+										as="span"
+										variant="tableHeader"
+										size="xs"
+									>
+										{header}
+									</Text>
 								</th>
 							))}
 						</tr>
@@ -48,9 +57,15 @@ const Table: React.FC<TableProps> = ({
 								{headers.map((_, colIndex) => (
 									<td
 										key={`table-cell-${rowIndex}-${colIndex}`}
-										className="px-5 py-4 text-center align-middle text-sm font-medium text-neutral-700 first:text-left"
+										className="px-5 py-4 text-center align-middle first:text-left"
 									>
-										{row[colIndex] ?? null}
+										<Text
+											as="span"
+											variant="tableCell"
+											size="sm"
+										>
+											{row[colIndex] ?? null}
+										</Text>
 									</td>
 								))}
 							</tr>
@@ -59,9 +74,11 @@ const Table: React.FC<TableProps> = ({
 							<tr>
 								<td
 									colSpan={Math.max(headers.length, 1)}
-									className="px-6 py-6 text-center text-neutral-500"
+									className="px-6 py-6 text-center"
 								>
-									No data available.
+									<Text variant="caption" size="sm">
+										No data available.
+									</Text>
 								</td>
 							</tr>
 						) : null}

@@ -81,7 +81,7 @@ function Teams() {
 			}
 		>
 			{selectedTeam ? (
-				<div className="flex flex-col gap-6 text-neutral-200">
+				<div className="flex flex-col gap-6">
 					<GlassCard
 						title={selectedTeam.name}
 						description={`${

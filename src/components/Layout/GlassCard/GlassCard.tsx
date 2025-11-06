@@ -1,4 +1,5 @@
 import React from "react";
+import { Header, Text } from "../../Typography";
 
 type GlassCardDetail = {
 	label: string;
@@ -38,37 +39,42 @@ const GlassCard: React.FC<GlassCardProps> = ({
 
 	return (
 		<div
-			className={`rounded-2xl border border-neutral-800/60 bg-neutral-900/70 p-8 shadow-[0_12px_30px_rgba(15,23,42,0.35)] backdrop-blur text-neutral-300 ${className}`}
+			className={`rounded-2xl border border-neutral-800/60 bg-neutral-900/70 p-8 shadow-[0_12px_30px_rgba(15,23,42,0.35)] backdrop-blur ${className}`}
 		>
 			{title ? (
-				<h2 className="text-xl font-semibold text-neutral-100">
+				<Header level={2} size="lg">
 					{title}
-				</h2>
+				</Header>
 			) : null}
 
 			{description ? (
-				<p
-					className={`text-sm leading-relaxed text-neutral-300 ${
-						title ? "mt-3" : ""
-					}`}
+				<Text
+					variant="muted"
+					size="sm"
+					className={title ? "mt-3" : undefined}
 				>
 					{description}
-				</p>
+				</Text>
 			) : null}
 
 			{hasDetails ? (
-				<dl className="mt-4 grid gap-3 text-sm text-neutral-300 sm:grid-cols-2">
+				<dl className="mt-4 grid gap-3 sm:grid-cols-2">
 					{details!.map((detail) => (
 						<div
 							key={detail.label}
 							className="rounded-xl border border-neutral-800/60 bg-neutral-900/60 px-4 py-3"
 						>
-							<dt className="text-xs uppercase tracking-wide text-neutral-500">
+							<Text as="dt" variant="eyebrowMuted" size="xs">
 								{detail.label}
-							</dt>
-							<dd className="mt-1 text-sm font-semibold text-neutral-100">
+							</Text>
+							<Text
+								as="dd"
+								variant="strong"
+								size="sm"
+								className="mt-1"
+							>
 								{detail.value}
-							</dd>
+							</Text>
 						</div>
 					))}
 				</dl>
@@ -76,7 +82,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 
 			{hasList ? (
 				<ul
-					className={`mt-4 grid gap-2 text-sm text-neutral-300 ${
+					className={`mt-4 grid gap-2 ${
 						listColumns === 2 ? "md:grid-cols-2" : ""
 					}`}
 				>
@@ -86,19 +92,18 @@ const GlassCard: React.FC<GlassCardProps> = ({
 							className="rounded-xl border border-neutral-800/60 bg-neutral-900/60 px-4 py-3"
 						>
 							{listVariant === "definition" && item.title ? (
-								<>
-									<span className="font-semibold text-neutral-100">
+								<div className="flex flex-wrap items-baseline gap-x-1">
+									<Text as="span" variant="strong" size="sm">
 										{item.title}
-									</span>
-									<span className="text-neutral-300">
-										{" "}
+									</Text>
+									<Text as="span" variant="muted" size="sm">
 										- {item.description}
-									</span>
-								</>
+									</Text>
+								</div>
 							) : (
-								<span className="text-neutral-300">
+								<Text as="span" variant="muted" size="sm">
 									{item.description}
-								</span>
+								</Text>
 							)}
 						</li>
 					))}
@@ -106,7 +111,9 @@ const GlassCard: React.FC<GlassCardProps> = ({
 			) : null}
 
 			{footer ? (
-				<p className="mt-4 text-sm text-neutral-300">{footer}</p>
+				<Text variant="muted" size="sm" className="mt-4">
+					{footer}
+				</Text>
 			) : null}
 
 			{children}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Text } from "../Typography";
 
 const Navbar: React.FC = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,16 +18,20 @@ const Navbar: React.FC = () => {
 	};
 
 	return (
-		<nav className="flex justify-center bg-linear-to-r from-neutral-950/95 via-neutral-900/95 to-neutral-950/95 text-neutral-100 border-b border-neutral-800/60 backdrop-blur shadow-[0_8px_30px_rgba(15,23,42,0.35)]">
+		<nav className="flex justify-center bg-linear-to-r from-neutral-950/95 via-neutral-900/95 to-neutral-950/95 border-b border-neutral-800/60 backdrop-blur shadow-[0_8px_30px_rgba(15,23,42,0.35)]">
 			<div className="w-full max-w-7xl px-6 md:px-8">
 				<div className="flex h-20 items-center justify-between">
 					{/* Left: Logo and/or Title */}
 					<div className="flex items-center">
-						<Link
-							to="/"
-							className="text-lg font-semibold uppercase tracking-[0.20em] text-neutral-100 drop-shadow-sm transition-colors duration-300 hover:text-sky-300"
-						>
-							WPPL Scoring System Demo
+						<Link to="/" className="group inline-flex items-center">
+							<Text
+								as="span"
+								variant="brand"
+								size="lg"
+								className="drop-shadow-sm transition-colors duration-300 group-hover:text-sky-300"
+							>
+								WPPL Scoring System Demo
+							</Text>
 						</Link>
 					</div>
 
@@ -37,15 +42,20 @@ const Navbar: React.FC = () => {
 								key={link.name}
 								to={link.path}
 								onClick={handleLinkClick}
-								className="group relative overflow-hidden rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-neutral-300 transition-all duration-200 hover:text-neutral-50"
+								className="group relative overflow-hidden rounded-full px-4 py-2 transition-all duration-200"
 							>
 								<span
 									aria-hidden="true"
 									className="pointer-events-none absolute inset-0 scale-0 bg-sky-500/20 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
 								/>
-								<span className="relative z-10">
+								<Text
+									as="span"
+									variant="nav"
+									size="xs"
+									className="relative z-10 transition-colors duration-200 group-hover:text-neutral-50"
+								>
 									{link.name}
-								</span>
+								</Text>
 								<span
 									aria-hidden="true"
 									className="pointer-events-none absolute inset-x-3 bottom-1 h-px scale-x-0 bg-sky-300/70 transition-transform duration-300 group-hover:scale-x-100"
@@ -103,9 +113,16 @@ const Navbar: React.FC = () => {
 								key={link.name}
 								to={link.path}
 								onClick={handleLinkClick}
-								className="rounded-lg px-3 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300 transition-colors duration-200 hover:bg-sky-500/15 hover:text-neutral-50"
+								className="group rounded-lg px-3 py-2 transition-colors duration-200 hover:bg-sky-500/15"
 							>
-								{link.name}
+								<Text
+									as="span"
+									variant="nav"
+									size="sm"
+									className="transition-colors duration-200 group-hover:text-neutral-50"
+								>
+									{link.name}
+								</Text>
 							</Link>
 						))}
 					</div>

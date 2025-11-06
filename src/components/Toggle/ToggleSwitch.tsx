@@ -1,4 +1,5 @@
 import React, { useId } from "react";
+import { Text } from "../Typography";
 
 interface ToggleSwitchProps {
 	checked: boolean;
@@ -75,7 +76,16 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 			</label>
 
 			{/* Optional text label */}
-			{label && <span className="select-none text-sm">{label}</span>}
+			{label ? (
+				<Text
+					as="span"
+					variant="muted"
+					size="sm"
+					className="select-none"
+				>
+					{label}
+				</Text>
+			) : null}
 		</div>
 	);
 };

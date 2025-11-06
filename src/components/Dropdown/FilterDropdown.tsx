@@ -1,4 +1,5 @@
 import React, { useId } from "react";
+import { Text } from "../Typography";
 
 interface DropdownOption {
 	value: string;
@@ -36,16 +37,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 	};
 
 	return (
-		<div
-			className={`flex w-full max-w-xs flex-col gap-2 text-neutral-200 ${className}`}
-		>
+		<div className={`flex w-full max-w-xs flex-col gap-2 ${className}`}>
 			{label ? (
-				<label
-					htmlFor={selectId}
-					className="text-xs font-semibold uppercase tracking-[0.32em] text-neutral-300"
-				>
+				<Text as="label" htmlFor={selectId} variant="eyebrow" size="xs">
 					{label}
-				</label>
+				</Text>
 			) : null}
 
 			<div className="relative">

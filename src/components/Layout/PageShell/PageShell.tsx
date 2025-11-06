@@ -1,4 +1,5 @@
 import React from "react";
+import { Header, Text } from "../../Typography";
 
 interface PageShellProps {
 	title: string;
@@ -27,15 +28,13 @@ const PageShell: React.FC<PageShellProps> = ({
 				<div
 					className={`mx-auto flex ${maxWidthClass} flex-col gap-10 ${paddingClass}`}
 				>
-					<header className="flex flex-wrap items-start justify-between gap-4 text-neutral-100">
+					<header className="flex flex-wrap items-start justify-between gap-4">
 						<div className="flex flex-col gap-2">
-							<h1 className="text-3xl font-semibold tracking-tight">
-								{title}
-							</h1>
+							<Header level={1}>{title}</Header>
 							{description ? (
-								<p className="text-sm text-neutral-400">
+								<Text variant="muted" size="sm">
 									{description}
-								</p>
+								</Text>
 							) : null}
 						</div>
 						{actions ? (
