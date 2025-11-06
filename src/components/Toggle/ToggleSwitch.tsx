@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface ToggleSwitchProps {
 	checked: boolean;
@@ -15,8 +15,11 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 	className = "",
 	disabled = false,
 	label,
-	id = "toggle",
+	id,
 }) => {
+	const generatedId = useId();
+	const inputId = id ?? generatedId;
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!disabled) onChange(e.target.checked);
 	};
@@ -26,7 +29,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 			{/* Hidden checkbox for accessibility */}
 			<input
 				type="checkbox"
-				id={id}
+				id={inputId}
 				checked={checked}
 				onChange={handleChange}
 				disabled={disabled}
@@ -35,9 +38,9 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 
 			{/* Toggle body */}
 			<label
-				htmlFor={id}
+				htmlFor={inputId}
 				className={`
-					relative flex h-7 w-13 cursor-pointer items-center rounded-xl border 
+					relative flex h-7 w-[52px] cursor-pointer items-center rounded-xl border group
 					transition-all duration-300 ease-in-out
 					${checked ? "bg-blue-500 border-blue-600" : "bg-neutral-200 border-neutral-300"}
 					${disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-95"}
