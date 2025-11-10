@@ -10,6 +10,8 @@ const MatchEntryPage = () => {
 		validationErrors,
 		handleSubmit,
 		isSubmitting,
+		autofillMatch,
+		isAutofilling,
 		teams,
 		teamsLoading,
 		homeTeamId,
@@ -65,6 +67,19 @@ const MatchEntryPage = () => {
 						</ul>
 					</div>
 				) : null}
+
+				<div className="flex justify-end">
+					<button
+						type="button"
+						onClick={autofillMatch}
+						disabled={isAutofilling || isSubmitting}
+						className="rounded-2xl border border-white/15 px-4 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-50"
+					>
+						{isAutofilling
+							? "Autofilling..."
+							: "Autofill From Database"}
+					</button>
+				</div>
 
 				<MatchMetaFields
 					teams={teams}

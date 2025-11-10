@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 
 import { fetchPlayersForTeam, fetchTeams, saveMatch } from "../api";
@@ -11,6 +11,7 @@ import {
 	todayIso,
 } from "../lineUtils";
 import type {
+	GameScore,
 	LineFormState,
 	PlayerOption,
 	ToastState,
@@ -23,6 +24,7 @@ const initialLines = () =>
 	);
 
 export const useMatchEntryForm = () => {
+	const rosterCacheRef = useRef<Map<string, PlayerOption[]>>(new Map());
 	const [teams, setTeams] = useState<TeamOption[]>([]);
 	const [teamsLoading, setTeamsLoading] = useState(false);
 	const [homeTeamId, setHomeTeamId] = useState("");
@@ -36,6 +38,63 @@ export const useMatchEntryForm = () => {
 	const [toast, setToast] = useState<ToastState>(null);
 	const [validationErrors, setValidationErrors] = useState<string[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isAutofilling, setIsAutofilling] = useState(false);
+
+	const getRosterForTeam = async (teamId: string) => {
+		const cached = rosterCacheRef.current.get(teamId);
+		if (cached) {
+			return cached;
+		}
+		const roster = await fetchPlayersForTeam(teamId);
+		rosterCacheRef.current.set(teamId, roster);
+		return roster;
+	};
+
+	const pickPlayersForLine = (
+		roster: PlayerOption[],
+		offset: number
+	): [string, string] => {
+		if (!roster.length) {
+			return ["", ""];
+		}
+		if (roster.length === 1) {
+			return [roster[0].id, roster[0].id];
+		}
+		const first = roster[offset % roster.length];
+		const second = roster[(offset + 1) % roster.length];
+		return [first.id, second.id];
+	};
+
+	const generateGameScores = (
+		gamesCount: number,
+		winner: "home" | "away"
+	): GameScore[] => {
+		const count = Math.max(gamesCount, MIN_GAMES_PER_LINE);
+		const winsNeeded = Math.floor(count / 2) + 1;
+		let winnerWins = 0;
+
+		return Array.from({ length: count }, (_, idx) => {
+			const winnerTakesGame = winnerWins < winsNeeded;
+			if (winnerTakesGame) {
+				winnerWins += 1;
+			}
+			const winningScore = 6;
+			const losingScore = Math.max(
+				0,
+				winningScore - (2 + ((idx + 1) % 3))
+			);
+
+			if (winner === "home") {
+				return winnerTakesGame
+					? { home: String(winningScore), away: String(losingScore) }
+					: { home: String(losingScore), away: String(winningScore) };
+			}
+
+			return winnerTakesGame
+				? { home: String(losingScore), away: String(winningScore) }
+				: { home: String(winningScore), away: String(losingScore) };
+		});
+	};
 
 	const maxGames = useMemo(
 		() =>
@@ -105,7 +164,8 @@ export const useMatchEntryForm = () => {
 			}
 
 			try {
-				const roster = await fetchPlayersForTeam(teamId);
+				const roster = await getRosterForTeam(teamId);
+				if (!isActive) return;
 				if (!isActive) return;
 				setPlayers(roster);
 			} catch (error) {
@@ -329,6 +389,131 @@ export const useMatchEntryForm = () => {
 		resetLines();
 	};
 
+	const autofillMatch = async () => {
+		setValidationErrors([]);
+		setToast(null);
+		setIsAutofilling(true);
+
+		try {
+			let availableTeams = teams;
+			if (!availableTeams.length) {
+				try {
+					setTeamsLoading(true);
+					availableTeams = await fetchTeams();
+					setTeams(availableTeams);
+				} finally {
+					setTeamsLoading(false);
+				}
+			}
+
+			if (!availableTeams.length) {
+				throw new Error("No teams available to autofill.");
+			}
+
+			const shuffledTeams = [...availableTeams].sort(
+				() => Math.random() - 0.5
+			);
+
+			const eligible: Array<{
+				team: TeamOption;
+				roster: PlayerOption[];
+			}> = [];
+
+			for (const team of shuffledTeams) {
+				try {
+					const roster = await getRosterForTeam(team.id);
+					if (roster.length >= 2) {
+						eligible.push({ team, roster });
+					}
+				} catch (error) {
+					console.error(error);
+				}
+
+				if (eligible.length === 2) {
+					break;
+				}
+			}
+
+			if (eligible.length < 2) {
+				throw new Error(
+					"Autofill requires at least two teams with available players."
+				);
+			}
+
+			const [awayEntry, homeEntry] = eligible;
+
+			const nextLines = lines.map((line, idx) => {
+				const [awayPlayer1Id, awayPlayer2Id] = pickPlayersForLine(
+					awayEntry.roster,
+					idx * 2
+				);
+				const [homePlayer1Id, homePlayer2Id] = pickPlayersForLine(
+					homeEntry.roster,
+					idx * 2
+				);
+				const winnerSide: "home" | "away" =
+					idx % 2 === 0 ? "home" : "away";
+				const games = generateGameScores(line.games.length, winnerSide);
+				const nextLine = {
+					...line,
+					teamA: {
+						player1Id: awayPlayer1Id,
+						player2Id: awayPlayer2Id,
+					},
+					teamH: {
+						player1Id: homePlayer1Id,
+						player2Id: homePlayer2Id,
+					},
+					games,
+				};
+				const computedWinner =
+					determineWinner(
+						nextLine,
+						homeEntry.team.id,
+						awayEntry.team.id
+					) ??
+					(winnerSide === "home"
+						? homeEntry.team.id
+						: awayEntry.team.id);
+				return {
+					...nextLine,
+					winnerTeamId: computedWinner,
+				};
+			});
+
+			const fallbackLocation =
+				homeEntry.team.location?.trim() ||
+				`${homeEntry.team.name} Courts`;
+
+			setHomeTeamId(homeEntry.team.id);
+			setAwayTeamId(awayEntry.team.id);
+			setHomePlayers(homeEntry.roster);
+			setAwayPlayers(awayEntry.roster);
+			rosterCacheRef.current.set(homeEntry.team.id, homeEntry.roster);
+			rosterCacheRef.current.set(awayEntry.team.id, awayEntry.roster);
+			setMatchDate(todayIso());
+			setMatchTime("19:00");
+			setLocation(fallbackLocation);
+			setLines(renumberLines(nextLines));
+
+			setToast({
+				type: "success",
+				message: `Autofilled ${awayEntry.team.name} at ${homeEntry.team.name}.`,
+			});
+		} catch (error) {
+			console.error(error);
+			setToast({
+				type: "error",
+				message:
+					error instanceof Error
+						? error.message
+						: "Unable to autofill from the database.",
+			});
+		} finally {
+			setIsAutofilling(false);
+		}
+	};
+
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setValidationErrors([]);
@@ -400,6 +585,8 @@ export const useMatchEntryForm = () => {
 		homeTeam,
 		awayTeam,
 		matchTitle,
+		autofillMatch,
+		isAutofilling,
 		handleHomeTeamChange,
 		handleAwayTeamChange,
 		handlePlayerChange,
