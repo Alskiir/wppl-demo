@@ -2,13 +2,7 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
-import {
-	AboutPage,
-	HomePage,
-	MatchEntryPage,
-	StandingsPage,
-	TeamsPage,
-} from "./pages";
+import { appRoutes } from "./routes/appRoutes";
 import "./styles/global.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -16,12 +10,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<App />}>
-					<Route index element={<HomePage />} />
-					<Route path="home" element={<HomePage />} />
-					<Route path="standings" element={<StandingsPage />} />
-					<Route path="teams" element={<TeamsPage />} />
-					<Route path="match-entry" element={<MatchEntryPage />} />
-					<Route path="about" element={<AboutPage />} />
+					{appRoutes.map(({ key, path, element }) => (
+						<Route key={key} path={path} element={element} />
+					))}
+					{appRoutes
+						.filter(({ index }) => index)
+						.map(({ key, element }) => (
+							<Route
+								key={`${key}-index`}
+								index
+								element={element}
+							/>
+						))}
 				</Route>
 			</Routes>
 		</BrowserRouter>

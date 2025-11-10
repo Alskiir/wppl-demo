@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Text } from "../Typography";
+import { navRoutes } from "../../routes/appRoutes";
 
 const Navbar: React.FC = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-	const navLinks = [
-		{ name: "Home", path: "/home" },
-		{ name: "Standings", path: "/standings" },
-		{ name: "Teams", path: "/teams" },
-		{ name: "Match Entry", path: "/match-entry" },
-		{ name: "About", path: "/about" },
-	];
 
 	const handleLinkClick = () => {
 		setIsMenuOpen(false);
@@ -37,9 +30,9 @@ const Navbar: React.FC = () => {
 
 					{/* Right: Nav Links */}
 					<div className="hidden md:flex items-center gap-6">
-						{navLinks.map((link) => (
+						{navRoutes.map((link) => (
 							<Link
-								key={link.name}
+								key={link.key}
 								to={link.path}
 								onClick={handleLinkClick}
 								className="group relative overflow-hidden rounded-full px-4 py-2 transition-all duration-200"
@@ -54,7 +47,7 @@ const Navbar: React.FC = () => {
 									size="xs"
 									className="relative z-10 transition-colors duration-200 group-hover:text-neutral-50"
 								>
-									{link.name}
+									{link.label}
 								</Text>
 								<span
 									aria-hidden="true"
@@ -108,9 +101,9 @@ const Navbar: React.FC = () => {
 					}`}
 				>
 					<div className="flex flex-col gap-2">
-						{navLinks.map((link) => (
+						{navRoutes.map((link) => (
 							<Link
-								key={link.name}
+								key={link.key}
 								to={link.path}
 								onClick={handleLinkClick}
 								className="group rounded-lg px-3 py-2 transition-colors duration-200 hover:bg-sky-500/15"
@@ -121,7 +114,7 @@ const Navbar: React.FC = () => {
 									size="sm"
 									className="transition-colors duration-200 group-hover:text-neutral-50"
 								>
-									{link.name}
+									{link.label}
 								</Text>
 							</Link>
 						))}
