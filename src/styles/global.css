@@ -34,6 +34,33 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+@media (prefers-color-scheme: light) {
+	:root {
+		color-scheme: light;
+		--surface-backdrop: #f5f7fb;
+		--surface-base: #ffffff;
+		--surface-panel: #f4f6fb;
+		--surface-card: #eef2fb;
+		--surface-raised: #e1e8f7;
+		--surface-hover: #d6dff2;
+		--surface-input: #ffffff;
+		--border-subtle: #d3daea;
+		--border-strong: #b6c2d9;
+		--border-highlight: #9fb1d1;
+		--text-primary: #0f172a;
+		--text-secondary: #27304b;
+		--text-muted: #4b5675;
+		--text-subtle: #6b7592;
+		--text-inverse: #f9fbff;
+		--accent: #1c7ed6;
+		--accent-strong: #0956a5;
+		--accent-muted: #d6e9ff;
+		--success: #0ca678;
+		--danger: #d6336c;
+		--focus-ring: #1c7ed6;
+	}
+}
+
 *,
 *::before,
 *::after {
