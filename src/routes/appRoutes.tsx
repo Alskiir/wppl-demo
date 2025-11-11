@@ -1,6 +1,7 @@
 import type { ComponentType, ReactElement } from "react";
 import {
 	AboutPage,
+	AllTablesPage,
 	HomePage,
 	MatchEntryPage,
 	StandingsPage,
@@ -35,6 +36,10 @@ const routeMeta = defineRoutes({
 	"match-entry": {
 		component: MatchEntryPage,
 		label: "Match Entry",
+	},
+	"all-tables": {
+		component: AllTablesPage,
+		label: "All Tables",
 	},
 	about: {
 		component: AboutPage,
