@@ -6,29 +6,16 @@ type TableRow = Array<React.ReactNode>;
 interface TableProps {
 	headers: React.ReactNode[];
 	data: TableRow[];
-	caption?: string;
 	className?: string;
 }
 
-const Table: React.FC<TableProps> = ({
-	headers,
-	data,
-	caption,
-	className = "",
-}) => {
+const Table: React.FC<TableProps> = ({ headers, data, className = "" }) => {
 	return (
 		<div
 			className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white/90 shadow-xl backdrop-blur ${className}`}
 		>
 			<div className="overflow-x-auto">
 				<table className="table-auto min-w-full">
-					{caption ? (
-						<caption className="bg-neutral-900/90 px-6 py-4 text-left">
-							<Text as="span" variant="tableHeader" size="xs">
-								{caption}
-							</Text>
-						</caption>
-					) : null}
 					<thead className="bg-linear-to-r from-neutral-900 via-neutral-800 to-neutral-900">
 						<tr>
 							{headers.map((header, index) => (
