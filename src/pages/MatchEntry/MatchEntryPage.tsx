@@ -50,8 +50,8 @@ const MatchEntryPage = () => {
 					<div
 						className={`rounded-2xl border px-4 py-3 text-sm ${
 							toast.type === "success"
-								? "border-emerald-400/70 text-emerald-100"
-								: "border-red-500/70 text-red-100"
+								? "border-(--success) bg-[#11211a] text-(--success)"
+								: "border-(--danger) bg-[#2a1219] text-(--danger)"
 						}`}
 					>
 						{toast.message}
@@ -59,7 +59,7 @@ const MatchEntryPage = () => {
 				) : null}
 
 				{validationErrors.length ? (
-					<div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
+					<div className="rounded-2xl border border-(--danger) bg-[#2a1219] p-4 text-sm text-(--danger)">
 						<ul className="list-disc space-y-1 pl-5">
 							{validationErrors.map((error) => (
 								<li key={error}>{error}</li>
@@ -73,7 +73,7 @@ const MatchEntryPage = () => {
 						type="button"
 						onClick={autofillMatch}
 						disabled={isAutofilling || isSubmitting}
-						className="rounded-2xl border border-white/15 px-4 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-50"
+						className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-2 text-sm text-(--text-secondary) transition-colors duration-200 hover:border-(--border-highlight) hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{isAutofilling
 							? "Autofilling..."
@@ -118,7 +118,7 @@ const MatchEntryPage = () => {
 					<button
 						type="submit"
 						disabled={isSubmitting}
-						className="rounded-2xl border border-cyan-400/70 bg-linear-to-r from-cyan-500/30 to-blue-600/30 px-8 py-3 text-sm font-semibold text-white transition hover:from-cyan-500/40 hover:to-blue-600/40 disabled:cursor-not-allowed disabled:opacity-60"
+						className="rounded-2xl border border-(--accent-strong) bg-(--accent-strong) px-8 py-3 text-sm font-semibold text-(--text-inverse) transition-colors duration-200 hover:bg-(--accent) disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						{isSubmitting ? "Saving..." : "Submit Match"}
 					</button>

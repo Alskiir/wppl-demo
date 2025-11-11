@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
 	};
 
 	return (
-		<nav className="flex justify-center bg-linear-to-r from-neutral-950/95 via-neutral-900/95 to-neutral-950/95 border-b border-neutral-800/60 backdrop-blur shadow-[0_8px_30px_rgba(15,23,42,0.35)]">
+		<nav className="flex justify-center border-b border-(--border-strong) bg-(--surface-panel)">
 			<div className="w-full max-w-7xl px-6 md:px-8">
 				<div className="flex h-20 items-center justify-between">
 					{/* Left: Logo and/or Title */}
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
 								as="span"
 								variant="brand"
 								size="lg"
-								className="drop-shadow-sm transition-colors duration-300 group-hover:text-sky-300"
+								className="transition-colors duration-300 group-hover:text-(--accent)"
 							>
 								WPPL Scoring System Demo
 							</Text>
@@ -68,28 +68,24 @@ const Navbar: React.FC = () => {
 									onClick={handleLinkClick}
 									aria-current={active ? "page" : undefined}
 									end={link.path === "/"}
-									className="group relative overflow-hidden rounded-full px-4 py-2 transition-all duration-200"
+									className={`group rounded-full border px-4 py-2 transition-colors duration-200 ${
+										active
+											? "border-(--border-highlight) bg-(--surface-raised)"
+											: "border-transparent hover:border-(--border-highlight) hover:bg-(--surface-card)"
+									}`}
 								>
-									<span
-										aria-hidden="true"
-										className="pointer-events-none absolute inset-0 scale-0 bg-sky-500/20 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
-									/>
 									<Text
 										as="span"
 										variant="nav"
 										size="xs"
-										className={`relative z-10 transition-colors duration-200 group-hover:text-neutral-50 ${
-											active ? "text-neutral-50" : ""
+										className={`transition-colors duration-200 ${
+											active
+												? "text-(--text-secondary)"
+												: "group-hover:text-(--text-secondary)"
 										}`}
 									>
 										{link.label}
 									</Text>
-									<span
-										aria-hidden="true"
-										className={`pointer-events-none absolute inset-x-3 bottom-1 h-px bg-sky-300/70 transition-transform duration-300 group-hover:scale-x-100 ${
-											active ? "scale-x-100" : "scale-x-0"
-										}`}
-									/>
 								</NavLink>
 							);
 						})}
@@ -98,7 +94,7 @@ const Navbar: React.FC = () => {
 					{/* Mobile menu toggle */}
 					<button
 						type="button"
-						className="inline-flex items-center justify-center rounded-xl border border-neutral-700/50 p-2 text-neutral-200 shadow-sm transition-all duration-200 hover:border-sky-400/60 hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-neutral-900 md:hidden"
+						className="inline-flex items-center justify-center rounded-xl border border-(--border-subtle) bg-(--surface-card) p-2 text-(--text-secondary) transition-colors duration-200 hover:border-(--border-highlight) hover:text-(--accent) md:hidden"
 						aria-controls="mobile-navigation"
 						aria-expanded={isMenuOpen}
 						onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -134,7 +130,7 @@ const Navbar: React.FC = () => {
 				{/* Mobile nav links */}
 				<div
 					id="mobile-navigation"
-					className={`md:hidden border-t border-neutral-800/60 bg-neutral-950/90 px-2 pb-4 pt-3 backdrop-blur ${
+					className={`md:hidden border-t border-(--border-subtle) bg-(--surface-panel) px-2 pb-4 pt-3 ${
 						isMenuOpen ? "block" : "hidden"
 					}`}
 				>
@@ -151,16 +147,20 @@ const Navbar: React.FC = () => {
 									onClick={handleLinkClick}
 									aria-current={active ? "page" : undefined}
 									end={link.path === "/"}
-									className={`group rounded-lg px-3 py-2 transition-colors duration-200 hover:bg-sky-500/15 ${
-										active ? "bg-sky-500/15" : ""
+									className={`group rounded-xl px-3 py-2 transition-colors duration-200 ${
+										active
+											? "bg-(--surface-raised)"
+											: "hover:bg-(--surface-card)"
 									}`}
 								>
 									<Text
 										as="span"
 										variant="nav"
 										size="sm"
-										className={`transition-colors duration-200 group-hover:text-neutral-50 ${
-											active ? "text-neutral-50" : ""
+										className={`transition-colors duration-200 ${
+											active
+												? "text-(--text-secondary)"
+												: "group-hover:text-(--text-secondary)"
 										}`}
 									>
 										{link.label}

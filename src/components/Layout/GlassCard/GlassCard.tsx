@@ -39,7 +39,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 
 	return (
 		<div
-			className={`rounded-2xl border border-neutral-800/60 bg-neutral-900/70 p-8 shadow-[0_12px_30px_rgba(15,23,42,0.35)] backdrop-blur ${className}`}
+			className={`rounded-3xl border border-(--border-strong) bg-(--surface-card) p-8 ${className}`}
 		>
 			{title ? (
 				<Header level={2} size="lg">
@@ -62,7 +62,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 					{details!.map((detail) => (
 						<div
 							key={detail.label}
-							className="rounded-xl border border-neutral-800/60 bg-neutral-900/60 px-4 py-3"
+							className="rounded-2xl border border-(--border-highlight) bg-(--surface-raised) px-4 py-3"
 						>
 							<Text as="dt" variant="eyebrowMuted" size="xs">
 								{detail.label}
@@ -82,14 +82,14 @@ const GlassCard: React.FC<GlassCardProps> = ({
 
 			{hasList ? (
 				<ul
-					className={`mt-4 grid gap-2 ${
+					className={`mt-4 grid gap-3 ${
 						listColumns === 2 ? "md:grid-cols-2" : ""
 					}`}
 				>
 					{listItems!.map((item, index) => (
 						<li
 							key={item.title ?? item.description ?? index}
-							className="rounded-xl border border-neutral-800/60 bg-neutral-900/60 px-4 py-3"
+							className="rounded-2xl border border-(--border-highlight) bg-(--surface-raised) px-4 py-3"
 						>
 							{listVariant === "definition" && item.title ? (
 								<div className="flex flex-wrap items-baseline gap-x-1">

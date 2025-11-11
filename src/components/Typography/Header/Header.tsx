@@ -26,11 +26,11 @@ const sizeClasses: Record<HeaderSize, string> = {
 };
 
 const variantClasses: Record<HeaderVariant, string> = {
-	primary: "text-neutral-100",
-	secondary: "text-neutral-200",
-	muted: "text-neutral-400",
-	accent: "text-sky-300",
-	inverse: "text-neutral-950",
+	primary: "text-[var(--text-primary)]",
+	secondary: "text-[var(--text-secondary)]",
+	muted: "text-[var(--text-muted)]",
+	accent: "text-[var(--accent)]",
+	inverse: "text-[var(--text-inverse)]",
 };
 
 const alignClasses: Record<HeaderAlign, string> = {

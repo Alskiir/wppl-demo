@@ -44,9 +44,9 @@ const LineRow = ({
 	onAddGame,
 	onRemoveGame,
 }: LineRowProps) => (
-	<tr className="border-t border-white/5 text-sm text-white/80">
+	<tr className="text-sm text-(--text-secondary) odd:bg-(--surface-card) even:bg-(--surface-raised) transition-colors duration-200 hover:bg-(--surface-hover)">
 		<td
-			className={`${COLUMN_WIDTH_CLASS} align-top font-semibold text-white`}
+			className={`${COLUMN_WIDTH_CLASS} align-top font-semibold text-(--text-secondary)`}
 		>
 			<div className="flex flex-col gap-2">
 				<span>Line {line.lineNumber}</span>
@@ -54,14 +54,14 @@ const LineRow = ({
 					<button
 						type="button"
 						onClick={() => onAddGame(line.id)}
-						className="rounded-lg border border-white/15 px-2 py-1 text-white/80 transition hover:border-green-400 hover:text-green-100"
+						className="rounded-xl border border-(--border-subtle) px-2 py-1 text-(--text-secondary) transition-colors duration-200 hover:border-(--border-highlight) hover:text-(--accent)"
 					>
 						+
 					</button>
 					<button
 						type="button"
 						onClick={() => onRemoveGame(line.id)}
-						className="rounded-lg border border-white/15 px-2 py-1 text-white/80 transition hover:border-red-400 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-40"
+						className="rounded-xl border border-(--border-subtle) px-2 py-1 text-(--text-secondary) transition-colors duration-200 hover:border-(--danger) hover:text-(--danger) disabled:cursor-not-allowed disabled:opacity-40"
 						disabled={line.games.length <= MIN_GAMES_PER_LINE}
 					>
 						-
@@ -132,7 +132,7 @@ const LineRow = ({
 					key={`${line.id}-placeholder-${idx}`}
 					className={`${COLUMN_WIDTH_CLASS} align-top`}
 				>
-					<div className="text-xs text-white/40">
+					<div className="text-xs text-(--text-subtle)">
 						Add a game to use this slot
 					</div>
 				</td>
@@ -140,7 +140,7 @@ const LineRow = ({
 		})}
 		<td className={COLUMN_WIDTH_CLASS}>
 			<select
-				className="w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white focus:border-cyan-400 disabled:opacity-50"
+				className="w-full rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-3 py-2 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:bg-(--surface-panel) disabled:text-(--text-subtle)"
 				value={line.winnerTeamId ?? ""}
 				onChange={(event) =>
 					onWinnerChange(line.id, event.target.value)

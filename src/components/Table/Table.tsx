@@ -12,16 +12,16 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ headers, data, className = "" }) => {
 	return (
 		<div
-			className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white/90 shadow-xl backdrop-blur ${className}`}
+			className={`overflow-hidden rounded-3xl border border-(--border-strong) bg-(--surface-card) ${className}`}
 		>
 			<div className="overflow-x-auto">
-				<table className="table-auto min-w-full">
-					<thead className="bg-linear-to-r from-neutral-900 via-neutral-800 to-neutral-900">
+				<table className="min-w-full table-auto">
+					<thead className="bg-(--surface-panel)">
 						<tr>
 							{headers.map((header, index) => (
 								<th
 									key={`table-header-${index}`}
-									className="px-6 py-4 text-center first:rounded-tl-2xl last:rounded-tr-2xl"
+									className="px-6 py-4 text-center first:text-left"
 									scope="col"
 								>
 									<Text
@@ -35,11 +35,11 @@ const Table: React.FC<TableProps> = ({ headers, data, className = "" }) => {
 							))}
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-neutral-100 bg-white">
+					<tbody className="divide-y divide-(--border-subtle)">
 						{data.map((row, rowIndex) => (
 							<tr
 								key={`table-row-${rowIndex}`}
-								className="odd:bg-white even:bg-neutral-50/60 transition-colors duration-200 hover:bg-sky-50"
+								className="odd:bg-(--surface-card) even:bg-(--surface-raised) transition-colors duration-200 hover:bg-(--surface-hover)"
 							>
 								{headers.map((_, colIndex) => (
 									<td

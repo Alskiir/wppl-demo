@@ -27,13 +27,7 @@ function TeamRosterTable({ roster }: TeamRosterTableProps) {
 		[roster]
 	);
 
-	return (
-		<Table
-			headers={tableHeaders}
-			data={tableData}
-			className="rounded-2xl border border-neutral-800/60 bg-neutral-900/60 shadow-[0_12px_30px_rgba(15,23,42,0.35)] backdrop-blur"
-		/>
-	);
+	return <Table headers={tableHeaders} data={tableData} />;
 }
 
 function formatFullName(firstName?: string | null, lastName?: string | null) {

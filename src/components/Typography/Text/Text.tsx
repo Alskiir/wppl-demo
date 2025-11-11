@@ -27,22 +27,22 @@ const sizeClasses: Record<TextSize, string> = {
 };
 
 const variantClasses: Record<TextVariant, string> = {
-	body: "text-neutral-200",
-	muted: "text-neutral-300",
-	subtle: "text-neutral-400",
-	strong: "text-neutral-100 font-semibold",
-	accent: "text-sky-300 font-semibold",
-	inverse: "text-neutral-950",
+	body: "text-[var(--text-primary)]",
+	muted: "text-[var(--text-secondary)]",
+	subtle: "text-[var(--text-muted)]",
+	strong: "text-[var(--text-secondary)] font-semibold",
+	accent: "text-[var(--accent)] font-semibold",
+	inverse: "text-[var(--text-inverse)]",
 	eyebrow:
-		"text-neutral-300 uppercase tracking-[0.32em] font-semibold leading-tight",
+		"text-[var(--text-muted)] uppercase tracking-[0.32em] font-semibold leading-tight",
 	eyebrowMuted:
-		"text-neutral-500 uppercase tracking-[0.32em] font-semibold leading-tight",
-	nav: "text-neutral-300 uppercase tracking-[0.28em] font-semibold leading-tight",
-	brand: "text-neutral-100 uppercase tracking-[0.20em] font-semibold leading-tight",
+		"text-[var(--text-subtle)] uppercase tracking-[0.32em] font-semibold leading-tight",
+	nav: "text-[var(--text-muted)] uppercase tracking-[0.28em] font-semibold leading-tight",
+	brand: "text-[var(--text-secondary)] uppercase tracking-[0.20em] font-semibold leading-tight",
 	tableHeader:
-		"text-neutral-200 uppercase tracking-[0.22em] font-semibold leading-tight",
-	tableCell: "text-neutral-700 font-medium",
-	caption: "text-neutral-500 leading-snug",
+		"text-[var(--text-secondary)] uppercase tracking-[0.22em] font-semibold leading-tight",
+	tableCell: "text-[var(--text-primary)] font-medium",
+	caption: "text-[var(--text-subtle)] leading-snug",
 };
 
 const alignClasses: Record<TextAlign, string> = {

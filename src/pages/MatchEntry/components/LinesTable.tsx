@@ -1,3 +1,4 @@
+import { Text } from "../../../components";
 import { COLUMN_WIDTH_CLASS } from "../constants";
 import type { LineFormState, PlayerOption, TeamOption } from "../types";
 import LineRow from "./LineRow";
@@ -47,20 +48,24 @@ const LinesTable = ({
 	onGameScoreChange,
 	onWinnerChange,
 }: LinesTableProps) => (
-	<section className="rounded-3xl border border-white/10 bg-white/5 p-4 md:p-6">
-		<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-			<div>
-				<p className="text-lg font-semibold text-white">Lines</p>
-				<p className="text-sm text-white/60">
-					Default view shows five lines - adjust lines or the number
-					of games per line as needed.
-				</p>
+	<section className="overflow-hidden rounded-3xl border border-(--border-strong) bg-(--surface-card)">
+		<div className="flex flex-col gap-4 border-b border-(--border-subtle) bg-(--surface-panel) px-4 py-5 md:flex-row md:items-center md:justify-between md:px-6 md:py-6">
+			<div className="space-y-2">
+				<Text as="p" variant="strong" size="lg">
+					Lines
+				</Text>
+				<Text variant="muted" size="sm" className="max-w-3xl">
+					Default view shows five lines.
+					<br />
+					Adjust the number of lines or games per line to match the
+					match sheet you are entering.
+				</Text>
 			</div>
-			<div className="flex gap-3">
+			<div className="flex flex-wrap gap-3">
 				<button
 					type="button"
 					onClick={onRemoveLine}
-					className="rounded-2xl border border-white/15 px-4 py-2 text-sm text-white hover:border-red-400 hover:text-red-100 disabled:opacity-40"
+					className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-2 text-sm text-(--text-secondary) transition-colors duration-200 hover:border-(--danger) hover:text-(--danger) disabled:cursor-not-allowed disabled:opacity-50"
 					disabled={lines.length === 1}
 				>
 					Remove Line
@@ -68,7 +73,7 @@ const LinesTable = ({
 				<button
 					type="button"
 					onClick={onAddLine}
-					className="rounded-2xl border border-cyan-400/50 px-4 py-2 text-sm text-cyan-100 hover:border-cyan-300"
+					className="rounded-2xl border border-(--border-highlight) px-4 py-2 text-sm font-semibold text-(--accent) transition-colors duration-200 hover:bg-(--surface-hover)"
 				>
 					Add Line
 				</button>
@@ -76,26 +81,99 @@ const LinesTable = ({
 		</div>
 
 		<div className="overflow-x-auto">
-			<table className="w-full min-w-[960px] text-left text-sm text-white/80">
-				<thead>
-					<tr className="text-xs uppercase tracking-wide text-white/50">
-						<th className={COLUMN_WIDTH_CLASS}>Line</th>
-						<th className={COLUMN_WIDTH_CLASS}>Player 1 (A)</th>
-						<th className={COLUMN_WIDTH_CLASS}>Player 2 (A)</th>
-						<th className={COLUMN_WIDTH_CLASS}>Player 1 (H)</th>
-						<th className={COLUMN_WIDTH_CLASS}>Player 2 (H)</th>
+			<table className="w-full min-w-[960px] table-auto text-sm text-(--text-primary)">
+				<thead className="bg-(--surface-panel)">
+					<tr>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="left"
+							>
+								Line
+							</Text>
+						</th>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="center"
+							>
+								Player 1 (A)
+							</Text>
+						</th>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="center"
+							>
+								Player 2 (A)
+							</Text>
+						</th>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="center"
+							>
+								Player 1 (H)
+							</Text>
+						</th>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="center"
+							>
+								Player 2 (H)
+							</Text>
+						</th>
 						{Array.from({ length: maxGames }, (_, idx) => (
 							<th
 								key={`game-head-${idx}`}
-								className={COLUMN_WIDTH_CLASS}
+								className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
 							>
-								Game {idx + 1}
+								<Text
+									as="span"
+									variant="tableHeader"
+									size="xs"
+									align="center"
+								>
+									Game {idx + 1}
+								</Text>
 							</th>
 						))}
-						<th className={COLUMN_WIDTH_CLASS}>Winner</th>
+						<th
+							className={`${COLUMN_WIDTH_CLASS} text-center first:text-left`}
+						>
+							<Text
+								as="span"
+								variant="tableHeader"
+								size="xs"
+								align="center"
+							>
+								Winner
+							</Text>
+						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody className="divide-y divide-(--border-subtle)">
 					{lines.map((line) => (
 						<LineRow
 							key={line.id}

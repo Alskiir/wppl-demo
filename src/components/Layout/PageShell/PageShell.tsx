@@ -22,13 +22,13 @@ const PageShell: React.FC<PageShellProps> = ({
 }) => {
 	return (
 		<div
-			className={`flex min-h-screen flex-col bg-neutral-950/95 ${className}`}
+			className={`flex min-h-screen flex-col bg-(--surface-base) ${className}`}
 		>
-			<main className="flex-1 py-16">
+			<main className="flex-1 py-12 md:py-16">
 				<div
 					className={`mx-auto flex ${maxWidthClass} flex-col gap-10 ${paddingClass}`}
 				>
-					<header className="flex flex-wrap items-start justify-between gap-4">
+					<header className="flex flex-wrap items-start justify-between gap-4 border-b border-(--border-subtle) pb-6">
 						<div className="flex flex-col gap-2">
 							<Header level={1}>{title}</Header>
 							{description ? (

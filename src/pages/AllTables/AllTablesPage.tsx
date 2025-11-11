@@ -157,7 +157,7 @@ function AllTablesPage() {
 							event.target.value as DatabaseTableName
 						)
 					}
-					className="rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm text-neutral-100 shadow-sm transition focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+					className="rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-4 py-2 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:text-(--text-subtle)"
 				>
 					{availableTables.map((table) => (
 						<option key={table.name} value={table.name}>
@@ -169,7 +169,7 @@ function AllTablesPage() {
 					type="button"
 					onClick={handleRefresh}
 					disabled={!selectedTable || isLoading}
-					className="rounded-xl border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-medium text-sky-100 shadow-sm transition hover:bg-sky-500/20 disabled:cursor-not-allowed disabled:border-neutral-700/60 disabled:text-neutral-500"
+					className="rounded-2xl border border-(--border-highlight) bg-(--surface-card) px-4 py-2 text-sm font-semibold text-(--accent) transition-colors duration-200 hover:bg-(--surface-hover) disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:text-(--text-subtle)"
 				>
 					{isLoading ? "Refreshing..." : "Refresh"}
 				</button>
@@ -232,11 +232,7 @@ function AllTablesPage() {
 					]}
 					footer="Results show the latest data returned by Supabase. Large tables may be truncated depending on server limits."
 				/>
-				<Table
-					headers={tableHeaders}
-					data={tableRows}
-					className="bg-transparent"
-				/>
+				<Table headers={tableHeaders} data={tableRows} />
 			</div>
 		);
 	}

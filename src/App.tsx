@@ -3,7 +3,7 @@ import { Navbar } from "./components";
 
 function App() {
 	return (
-		<div className="flex flex-col min-h-screen bg-gray-50">
+		<div className="flex min-h-screen flex-col bg-[var(--surface-backdrop)] text-[var(--text-primary)]">
 			<Navbar />
 			<div className="grow">
 				<Outlet />

@@ -51,7 +51,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 					value={value ?? ""}
 					onChange={handleChange}
 					disabled={disabled}
-					className={`peer w-full appearance-none rounded-xl border border-neutral-800/70 bg-neutral-900/70 px-5 py-3 text-sm font-medium text-neutral-100 shadow-[0_12px_30px_rgba(15,23,42,0.35)] transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-4 focus:ring-sky-500/40 disabled:cursor-not-allowed disabled:border-neutral-700 disabled:bg-neutral-800/50 disabled:text-neutral-500`}
+					className="peer w-full appearance-none rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-5 py-3 text-sm font-medium text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:bg-(--surface-panel) disabled:text-(--text-subtle)"
 				>
 					<option value="" disabled={placeholder === null}>
 						{placeholder}
@@ -67,7 +67,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 					))}
 				</select>
 
-				<span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-neutral-400 transition-transform duration-200 peer-focus:text-sky-300">
+				<span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-(--text-muted) transition-colors duration-200 peer-focus:text-(--accent)">
 					<svg
 						className="h-4 w-4"
 						xmlns="http://www.w3.org/2000/svg"
