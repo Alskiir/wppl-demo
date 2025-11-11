@@ -1,88 +1,92 @@
 import { GlassCard, PageShell } from "../../components";
 
-const coreFeatures = [
+const siteSections = [
 	{
-		title: "Dynamic Scoring Engine",
+		title: "All Tables Dashboard",
 		description:
-			"Updates standings automatically as match results are entered.",
+			"Presents every recorded match in one scrollable view so visitors can compare lines, scores, and divisions without jumping between tabs.",
 	},
 	{
-		title: "Team & Player Profiles",
+		title: "Standings Tracker",
 		description:
-			"Keeps every roster organized, searchable, and ready for captains.",
+			"Calculates win-loss momentum per conference and division, highlighting the scenarios that influence playoff seeding.",
 	},
 	{
-		title: "Match Scheduling",
+		title: "Team Directory",
 		description:
-			"Balances upcoming fixtures with detailed recaps of completed games.",
+			"Combines roster cards, player bios, and captain notes to show how each squad is constructed and where their strengths come from.",
 	},
 	{
-		title: "Season & Division Management",
-		description: "Structures data by skill level, region, and timeframe.",
+		title: "Match Entry Workspace",
+		description:
+			"Streamlines captain workflows with PlayerSelect, LinesTable, and GameColumn components that validate lineups before publishing.",
 	},
 	{
-		title: "Responsive Design",
+		title: "Data Playground",
 		description:
-			"Delivers a consistent experience from desktops to courtside devices.",
+			"Results and teams data sets double as fixtures for prototypes and as seeds for future API integrations.",
 	},
 ];
 
 const technologyStack = [
 	{
 		name: "React + TypeScript + Vite",
-		description: "Powering fast, type-safe UI development.",
-	},
-	{
-		name: "Tailwind CSS",
 		description:
-			"Modern, adaptive styling with a consistent design language.",
+			"Route-driven pages stay fast thanks to typed hooks, component composition, and Vite's instant dev feedback.",
 	},
 	{
-		name: "Node.js / Express",
-		description: "Planned backend services for APIs and real-time updates.",
+		name: "Tailwind CSS + custom tokens",
+		description:
+			"Utility classes pair with GlassCard and PageShell primitives for a cohesive brand treatment on every screen size.",
 	},
 	{
-		name: "PostgreSQL",
-		description: "Relational schema designed for nationwide scalability.",
+		name: "Modular data layer",
+		description:
+			"Static TypeScript records mirror the schemas planned for league APIs, keeping mock and live data interchangeable.",
+	},
+	{
+		name: "API-ready Node/Express services",
+		description:
+			"The project scaffolding anticipates secure endpoints for standings math, score validation, and push notifications.",
 	},
 ];
 
 const futureVision = [
-	"Player registration and ranking history",
-	"Real-time score submission and live match updates",
-	"Captain toolkits and integrated team communication",
-	"League-wide analytics dashboards and automated reports",
-	"Optional mobile app integration for sideline operations",
+	"Live scoring widgets that mirror Match Entry actions and update All Tables in real time.",
+	"Self-serve analytics so captains can filter shot differentials, court surfaces, and player availability trends.",
+	"In-app comms linking rosters, schedule adjustments, and broadcast notes directly to the Teams and Standings pages.",
+	"Progressive Web App packaging for offline score entry and sideline-friendly push alerts.",
+	"Open data exports that let tournament operators sync WPPL stats with national rankings.",
 ];
 
 function AboutPage() {
 	return (
 		<PageShell
-			title="About the WPPL Scoring System"
-			description="The WPPL scoring demo showcases a modern league platform designed specifically for the Women's Power Pickleball League."
+			title="WPPL Scoring System Overview"
+			description="This page narrates how every screen in the Women's Power Pickleball League demo fits together and who each surface is built for."
 			maxWidthClass="max-w-5xl"
 			paddingClass="px-6 md:px-10"
 		>
-			<GlassCard description="This application brings scheduling, score tracking, and standings together in a single web-based experience. With performance, clarity, and scalability in mind, the WPPL Scoring System helps organizers, captains, and fans stay aligned throughout every season." />
+			<GlassCard description="The WPPL Scoring System is a single-page web experience where standings, results, rosters, and match entry tools share a common layout system. Navigation stays consistent whether someone is scanning the All Tables dashboard, diving into the Teams view, or logging a fresh match, making it easier to explain the entire site at a glance." />
 
 			<div className="grid gap-6 md:grid-cols-2">
 				<GlassCard
-					title="Purpose"
-					description="This demo lays the groundwork for a future system that can support the Women's Power Pickleball League (WPPL) across multiple divisions, regions, and seasons. The goal is to provide reliable tools for league organizers while giving players and fans a clear view of ongoing standings and results."
+					title="Project Intent"
+					description="This demo exists as a conversation piece with league directors. It demonstrates how data from results.ts, teams.ts, and future APIs can be surfaced through interactive tables, filterable cards, and controlled forms."
 				/>
 
 				<GlassCard
-					title="Core Features"
-					listItems={coreFeatures.map((feature) => ({
-						title: feature.title,
-						description: feature.description,
+					title="Page-by-Page Tour"
+					listItems={siteSections.map((section) => ({
+						title: section.title,
+						description: section.description,
 					}))}
 				/>
 			</div>
 
 			<GlassCard
 				title="Technology Stack"
-				description="This demo uses a modern, scalable frontend and lays the foundation for a production-ready full-stack solution:"
+				description="Everything you see on the public demo is backed by a lightweight but production-minded toolkit:"
 				listItems={technologyStack.map((tech) => ({
 					title: tech.name,
 					description: tech.description,
@@ -92,17 +96,17 @@ function AboutPage() {
 
 			<GlassCard
 				title="Future Vision"
-				description="As the WPPL grows, the platform is ready to evolve into a comprehensive digital ecosystem:"
+				description="The current experience explains what each page does today, and the following roadmap shows how it grows once live league data is connected:"
 				listItems={futureVision.map((item) => ({
 					description: item,
 				}))}
 				listColumns={2}
-				footer="The architecture and data model are engineered for expansion, supporting inter-league play and nationwide participation."
+				footer="The site architecture already separates layout, data, and interaction layers so new modules can ship without redesigning the core experience."
 			/>
 
 			<GlassCard
 				title="About the Developer"
-				description="This experience was designed and developed by Douglass Hart, a software developer with a background in graphics technology and computer information systems. The focus is to combine technical precision with an intuitive user experience so the WPPL can grow with a digital platform tailored to its needs."
+				description="This demo was developed by Douglass Hart, a software developer passionate about combining technical precision with creative design. It serves as a showcase of his ability to unify interface design, database structure, and user experience into a cohesive web application."
 			/>
 		</PageShell>
 	);
