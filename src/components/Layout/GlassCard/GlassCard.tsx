@@ -60,7 +60,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 					{details!.map((detail) => (
 						<div
 							key={detail.label}
-							className="rounded-[22px] border border-(--border-subtle) bg-(--surface-raised) px-5 py-4 shadow-[var(--md-sys-elevation-1)]"
+							className="rounded-[22px] border border-(--border-subtle) bg-(--surface-raised) px-5 py-4 shadow-(--md-sys-elevation-1)"
 						>
 							<Text as="dt" variant="eyebrowMuted" size="xs">
 								{detail.label}

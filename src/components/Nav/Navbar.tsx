@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
 	};
 
 	return (
-		<nav className="sticky top-0 z-50 border-b border-(--border-subtle) bg-(--surface-panel) shadow-[var(--md-sys-elevation-1)] backdrop-blur-xl">
+		<nav className="sticky top-0 z-50 border-b border-(--border-subtle) bg-(--surface-panel) shadow-(--md-sys-elevation-1) backdrop-blur-xl">
 			<div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 md:px-8">
 				<div className="flex items-center">
 					{/* Left: Logo and/or Title */}
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
 							as="span"
 							variant="brand"
 							size="lg"
-							className="text-[var(--text-primary)] transition-colors duration-300 group-hover:text-(--accent)"
+							className="text-(--text-primary) transition-colors duration-300 group-hover:text-(--accent)"
 						>
 							WPPL Scoring System Demo
 						</Text>
@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
 								end={link.path === "/"}
 								className={`group rounded-full px-4 py-2 text-sm font-semibold tracking-wide transition-colors duration-200 ${
 									active
-										? "bg-(--accent-muted) text-[var(--md-sys-color-on-primary-container)] shadow-[var(--md-sys-elevation-1)]"
+										? "bg-(--accent-muted) text-(--md-sys-color-on-primary-container) shadow-(--md-sys-elevation-1)"
 										: "text-(--text-muted) hover:bg-(--surface-hover)"
 								}`}
 							>
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
 									size="xs"
 									className={`transition-colors duration-200 ${
 										active
-											? "text-[var(--md-sys-color-on-primary-container)]"
+											? "text-(--md-sys-color-on-primary-container)"
 											: "text-(--text-muted) group-hover:text-(--text-secondary)"
 									}`}
 								>
@@ -144,7 +144,7 @@ const Navbar: React.FC = () => {
 								end={link.path === "/"}
 								className={`rounded-[18px] px-4 py-3 text-sm font-semibold ${
 									active
-										? "bg-(--accent-muted) text-[var(--md-sys-color-on-primary-container)]"
+										? "bg-(--accent-muted) text-(--md-sys-color-on-primary-container)"
 										: "text-(--text-secondary) hover:bg-(--surface-hover)"
 								}`}
 							>
