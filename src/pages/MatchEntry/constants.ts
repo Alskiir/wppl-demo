@@ -1,9 +1,11 @@
 export const DEFAULT_LINE_COUNT = 5;
 export const DEFAULT_GAMES_PER_LINE = 3;
 export const MIN_GAMES_PER_LINE = 1;
-export const COLUMN_WIDTH_CLASS = "px-5 py-5";
-export const LINE_COLUMN_WIDTH_CLASS = "px-4 py-5";
-export const GAME_COLUMN_WIDTH_CLASS = "px-3 py-5";
+export const COLUMN_WIDTH_CLASS = "px-2 py-4 sm:px-3 sm:py-4 lg:px-5 lg:py-5";
+export const LINE_COLUMN_WIDTH_CLASS =
+	"px-2 py-4 sm:px-3 sm:py-4 lg:px-4 lg:py-5";
+export const GAME_COLUMN_WIDTH_CLASS =
+	"px-1.5 py-3 sm:px-2.5 sm:py-4 lg:px-3 lg:py-5";
 export const LINE_COLUMN_WEIGHT = 8;
 export const PLAYER_COLUMN_WEIGHT = 20;
 export const GAME_COLUMN_WEIGHT = 12;

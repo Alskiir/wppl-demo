@@ -158,7 +158,7 @@ const LinesTable = ({
 
 			<div className="overflow-x-auto" ref={scrollContainerRef}>
 				<table
-					className="table-auto text-sm text-(--text-primary)"
+					className="table-fixed text-sm text-(--text-primary)"
 					style={{ width: `${tableWidth || 0}px` }}
 				>
 					<thead className="bg-(--surface-panel)">
