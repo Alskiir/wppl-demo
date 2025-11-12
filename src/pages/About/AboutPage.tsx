@@ -2,112 +2,140 @@ import { GlassCard, PageShell } from "../../components";
 
 const siteSections = [
 	{
-		title: "All Tables Dashboard",
+		title: "Home & Navigation",
 		description:
-			"Presents every recorded match in one scrollable view so visitors can compare lines, scores, and divisions without jumping between tabs.",
+			"Sticky header keeps quick links in view and welcomes visitors with a short overview so nobody gets lost on desktop or phone.",
 	},
 	{
-		title: "Standings Tracker",
+		title: "Standings",
 		description:
-			"Calculates win-loss momentum per conference and division, highlighting the scenarios that influence playoff seeding.",
+			"Pulls the Supabase view team_standings into a ready-made table, sorts by total points, and surfaces helpful error cards if credentials fail.",
 	},
 	{
-		title: "Team Directory",
+		title: "Teams",
 		description:
-			"Combines roster cards, player bios, and captain notes to show how each squad is constructed and where their strengths come from.",
+			"Dropdown filter feeds the TeamDetailsCard and roster table, showing contact info, roles, and player counts straight from team_membership.",
 	},
 	{
-		title: "Match Entry Workspace",
+		title: "Match Entry",
 		description:
-			"Streamlines captain workflows with PlayerSelect, LinesTable, and GameColumn components that validate lineups before publishing.",
+			"Guided form collects opponents, schedule, lines, games, and winners, mirroring the sheets captains fill out after each meet.",
 	},
 	{
-		title: "Data Playground",
+		title: "All Tables",
 		description:
-			"Results and teams data sets double as fixtures for prototypes and as seeds for future API integrations.",
+			"Lists every configured Supabase table (team, person, match, line_game, and more) so staff can browse raw rows without touching SQL.",
 	},
 ];
 
-const technologyStack = [
+const matchEntryHighlights = [
+	"Roster dropdowns unlock only after a team is chosen, preventing away players from being mixed with home selections.",
+	"Line builder adds or removes pairings, re-numbers each row, and keeps at least one line ready so the sheet always has a starting point.",
+	"Game columns include plus and minus buttons beside each score, which helps tablet users update tallies without typing tiny numbers.",
+	"Every edit re-checks the score math so line winners and the overall match winner are confirmed before saving.",
+	"Autofill button grabs two teams and their players from Supabase, seeds believable scores, and fills the location field for quick demos.",
+	"Submit button chains three Supabase inserts (match, match_line, line_game) and shows success or error banners right inside the form.",
+];
+
+const dataPractices = [
 	{
 		name: "React + TypeScript + Vite",
 		description:
-			"Route-driven pages stay fast thanks to typed hooks, component composition, and Vite's instant dev feedback.",
+			"Typed hooks such as useMatchEntryForm and useTeamsPageData keep state predictable while Vite delivers fast refreshes during demos.",
 	},
 	{
-		name: "Tailwind CSS + custom tokens",
+		name: "Supabase-backed data",
 		description:
-			"Utility classes pair with GlassCard and PageShell primitives for a cohesive brand treatment on every screen size.",
+			"The shared client in lib/supabaseClient pipes every request through resolveSupabase, so GlassCard banners can raise helpful errors and tables always get safe fallback data.",
 	},
 	{
-		name: "Modular data layer",
+		name: "Reusable layout system",
 		description:
-			"Static TypeScript records mirror the schemas planned for league APIs, keeping mock and live data interchangeable.",
+			"Navbar, PageShell, GlassCard, and the shared Table component keep spacing, tone, and interactions consistent across phones, tablets, and laptops.",
 	},
 	{
-		name: "API-ready Node/Express services",
+		name: "Utility helpers",
 		description:
-			"The project scaffolding anticipates secure endpoints for standings math, score validation, and push notifications.",
+			"dataTransforms.ts sanitizes names, IDs, and numbers before they hit dropdowns or rows, which keeps mock data and live data interchangeable.",
 	},
 ];
 
-const futureVision = [
-	"Live scoring widgets that mirror Match Entry actions and update All Tables in real time.",
-	"Self-serve analytics so captains can filter shot differentials, court surfaces, and player availability trends.",
-	"In-app comms linking rosters, schedule adjustments, and broadcast notes directly to the Teams and Standings pages.",
-	"Progressive Web App packaging for offline score entry and sideline-friendly push alerts.",
-	"Open data exports that let tournament operators sync WPPL stats with national rankings.",
+const capabilityHighlights = [
+	"Keeps league directors, captains, and volunteers on one responsive site instead of juggling spreadsheets.",
+	"Reads standings, rosters, and raw tables directly from Supabase and writes structured match data back the moment a form is submitted.",
+	"Auto-builds tables and column orders based on whatever the database returns, so the All Tables view stays flexible.",
+	"Surfaces banner messaging whenever data fails to load, giving staff clear next steps without digging into developer tools.",
+	"Pairs modern styling with accessible controls (labels, focus states, inline help) so the experience works for non-technical staff.",
+];
+
+const roadmap = [
+	"Push every verified roster into a MailChimp audience so directors can fire off division-wide updates without exporting CSVs.",
+	"Trigger MailChimp automations whenever a match submission lands, sending recaps and reminders that reuse the Match Entry data.",
+	"Use the RegistrationWorks API to import registrations directly into Supabase tables, guaranteeing that players, captains, and teams stay synchronized.",
+	"Run RegistrationWorks checks when captains pick players, blocking ineligible athletes and showing a friendly GlassCard prompt inside the form.",
 ];
 
 function AboutPage() {
 	return (
 		<PageShell
-			title="WPPL Scoring System Overview"
-			description="This page narrates how every screen in the Women's Power Pickleball League demo fits together and who each surface is built for."
+			title="About the WPPL Demo"
+			description="A walk-through of how the scoring system behaves, who it helps, and which tools power it."
 			maxWidthClass="max-w-5xl"
 			paddingClass="px-6 md:px-10"
 		>
-			<GlassCard description="The WPPL Scoring System is a single-page web experience where standings, results, rosters, and match entry tools share a common layout system. Navigation stays consistent whether someone is scanning the All Tables dashboard, diving into the Teams view, or logging a fresh match, making it easier to explain the entire site at a glance." />
+			<GlassCard
+				title="What this solves"
+				description="League directors can review the latest results before planning broadcasts, captains can lock in lineups the moment play wraps, and volunteers can audit Supabase data without leaving the browser."
+			/>
+
+			<GlassCard description="WPPL Scoring System Demo keeps standings, rosters, match sheets, and database inspection tools inside one guided layout. Every screen shares the same design language, so visitors can move from checking scores to entering new ones without relearning the page." />
 
 			<div className="grid gap-6 md:grid-cols-2">
 				<GlassCard
-					title="Project Intent"
-					description="This demo exists as a conversation piece with league directors. It demonstrates how data from results.ts, teams.ts, and future APIs can be surfaced through interactive tables, filterable cards, and controlled forms."
-				/>
-
-				<GlassCard
-					title="Page-by-Page Tour"
+					title="Page-by-page tour"
 					listItems={siteSections.map((section) => ({
 						title: section.title,
 						description: section.description,
 					}))}
 				/>
+				<GlassCard
+					title="Match Entry workflow"
+					description="The heaviest workflow lives on the Match Entry page, where captains record every detail from venue to game scores."
+					listItems={matchEntryHighlights.map((item) => ({
+						description: item,
+					}))}
+					listVariant="bullet"
+				/>
 			</div>
 
 			<GlassCard
-				title="Technology Stack"
-				description="Everything you see on the public demo is backed by a lightweight but production-minded toolkit:"
-				listItems={technologyStack.map((tech) => ({
+				title="Data + tooling"
+				description="Each feature leans on a compact but production-minded toolkit:"
+				listItems={dataPractices.map((tech) => ({
 					title: tech.name,
 					description: tech.description,
 				}))}
 				listColumns={2}
 			/>
 
-			<GlassCard
-				title="Future Vision"
-				description="The current experience explains what each page does today, and the following roadmap shows how it grows once live league data is connected:"
-				listItems={futureVision.map((item) => ({
-					description: item,
-				}))}
-				listColumns={2}
-				footer="The site architecture already separates layout, data, and interaction layers so new modules can ship without redesigning the core experience."
-			/>
+			<div className="grid gap-6 md:grid-cols-2">
+				<GlassCard
+					title="Capabilities on display"
+					listItems={capabilityHighlights.map((item) => ({
+						description: item,
+					}))}
+					listVariant="bullet"
+				/>
 
 			<GlassCard
-				title="About the Developer"
-				description="This demo was developed by Douglass Hart, a software developer passionate about combining technical precision with creative design. It serves as a showcase of his ability to unify interface design, database structure, and user experience into a cohesive web application."
-			/>
+				title="MailChimp + RegistrationWorks integrations"
+				description="These integrations plug communication and registration tools straight into the existing Supabase workflow:"
+				listItems={roadmap.map((item) => ({
+					description: item,
+				}))}
+					listVariant="bullet"
+				/>
+			</div>
 		</PageShell>
 	);
 }
