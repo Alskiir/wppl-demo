@@ -11,11 +11,9 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ headers, data, className = "" }) => {
 	return (
-		<div
-			className={`overflow-hidden rounded-3xl border border-(--border-strong) bg-(--surface-card) ${className}`}
-		>
+		<div className={`md-card overflow-hidden ${className}`}>
 			<div className="overflow-x-auto">
-				<table className="min-w-full table-auto">
+				<table className="min-w-full table-auto text-sm text-(--text-primary)">
 					<thead className="bg-(--surface-panel)">
 						<tr>
 							{headers.map((header, index) => (
@@ -39,7 +37,7 @@ const Table: React.FC<TableProps> = ({ headers, data, className = "" }) => {
 						{data.map((row, rowIndex) => (
 							<tr
 								key={`table-row-${rowIndex}`}
-								className="odd:bg-(--surface-card) even:bg-(--surface-raised) transition-colors duration-200 hover:bg-(--surface-hover)"
+								className="transition-colors duration-200 hover:bg-(--surface-hover)"
 							>
 								{headers.map((_, colIndex) => (
 									<td

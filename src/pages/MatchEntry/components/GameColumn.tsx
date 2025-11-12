@@ -21,8 +21,7 @@ const GameColumn = ({
 	onScoreChange,
 	columnWidth,
 }: GameColumnProps) => {
-	const inputClass =
-		"w-full rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-3 py-2 pr-12 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none appearance-none";
+	const inputClass = "md-input pr-12";
 
 	const handleStep = (field: "home" | "away", delta: 1 | -1) => {
 		const currentValue = Number(game[field] || 0);
@@ -37,7 +36,7 @@ const GameColumn = ({
 		value: string
 	) => (
 		<div className="space-y-1 text-xs">
-			<span className="font-semibold text-(--text-subtle)">{label}</span>
+			<span className="md-field-label">{label}</span>
 			<div className="relative">
 				<input
 					type="number"
@@ -55,10 +54,10 @@ const GameColumn = ({
 					}
 					className={inputClass}
 				/>
-				<div className="absolute inset-y-0 right-0 flex w-10 flex-col overflow-hidden rounded-r-2xl border-l border-(--border-subtle) bg-(--surface-card)">
+				<div className="absolute inset-y-1 right-1 flex w-10 flex-col overflow-hidden rounded-[18px] border border-(--border-subtle) bg-(--surface-panel)">
 					<button
 						type="button"
-						className="flex-1 text-(--text-subtle) transition-colors duration-150 hover:bg-(--surface-hover) hover:text-(--accent)"
+						className="flex-1 text-(--text-secondary) transition-colors duration-150 hover:bg-(--surface-hover) hover:text-(--accent)"
 						onClick={() => handleStep(field, 1)}
 						aria-label={`Increase ${label} score`}
 					>
@@ -78,7 +77,7 @@ const GameColumn = ({
 					</button>
 					<button
 						type="button"
-						className="flex-1 text-(--text-subtle) transition-colors duration-150 hover:bg-(--surface-hover) hover:text-(--accent)"
+						className="flex-1 text-(--text-secondary) transition-colors duration-150 hover:bg-(--surface-hover) hover:text-(--accent)"
 						onClick={() => handleStep(field, -1)}
 						aria-label={`Decrease ${label} score`}
 					>

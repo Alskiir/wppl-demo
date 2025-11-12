@@ -124,7 +124,7 @@ const LinesTable = ({
 	const tableWidth = Math.max(containerWidth, totalWeight * unitWidth || 0);
 
 	return (
-		<section className="overflow-hidden rounded-3xl border border-(--border-strong) bg-(--surface-card)">
+		<section className="md-card overflow-hidden p-0">
 			<div className="flex flex-col gap-4 border-b border-(--border-subtle) bg-(--surface-panel) px-4 py-5 md:flex-row md:items-center md:justify-between md:px-6 md:py-6">
 				<div className="space-y-2">
 					<Text as="p" variant="strong" size="lg">
@@ -141,7 +141,7 @@ const LinesTable = ({
 					<button
 						type="button"
 						onClick={onRemoveLine}
-						className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-2 text-sm text-(--text-secondary) transition-colors duration-200 hover:border-(--danger) hover:text-(--danger) disabled:cursor-not-allowed disabled:opacity-50"
+						className="md-outlined-button text-sm"
 						disabled={lines.length === 1}
 					>
 						Remove Line
@@ -149,7 +149,7 @@ const LinesTable = ({
 					<button
 						type="button"
 						onClick={onAddLine}
-						className="rounded-2xl border border-(--border-highlight) px-4 py-2 text-sm font-semibold text-(--accent) transition-colors duration-200 hover:bg-(--surface-hover)"
+						className="md-filled-button text-sm"
 					>
 						Add Line
 					</button>

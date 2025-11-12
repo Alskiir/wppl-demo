@@ -38,9 +38,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 	const hasDetails = Boolean(details?.length);
 
 	return (
-		<div
-			className={`rounded-3xl border border-(--border-strong) bg-(--surface-card) p-8 ${className}`}
-		>
+		<div className={`md-card p-8 ${className}`}>
 			{title ? (
 				<Header level={2} size="lg">
 					{title}
@@ -58,11 +56,11 @@ const GlassCard: React.FC<GlassCardProps> = ({
 			) : null}
 
 			{hasDetails ? (
-				<dl className="mt-4 grid gap-3 sm:grid-cols-2">
+				<dl className="mt-5 grid gap-4 sm:grid-cols-2">
 					{details!.map((detail) => (
 						<div
 							key={detail.label}
-							className="rounded-2xl border border-(--border-highlight) bg-(--surface-raised) px-4 py-3"
+							className="rounded-[22px] border border-(--border-subtle) bg-(--surface-raised) px-5 py-4 shadow-[var(--md-sys-elevation-1)]"
 						>
 							<Text as="dt" variant="eyebrowMuted" size="xs">
 								{detail.label}
@@ -71,7 +69,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 								as="dd"
 								variant="strong"
 								size="sm"
-								className="mt-1"
+								className="mt-1 text-[1.05rem]"
 							>
 								{detail.value}
 							</Text>
@@ -82,22 +80,28 @@ const GlassCard: React.FC<GlassCardProps> = ({
 
 			{hasList ? (
 				<ul
-					className={`mt-4 grid gap-3 ${
+					className={`mt-6 grid gap-3 ${
 						listColumns === 2 ? "md:grid-cols-2" : ""
 					}`}
 				>
 					{listItems!.map((item, index) => (
 						<li
 							key={item.title ?? item.description ?? index}
-							className="rounded-2xl border border-(--border-highlight) bg-(--surface-raised) px-4 py-3"
+							className="rounded-[22px] border border-(--border-subtle) bg-(--surface-panel) px-5 py-4"
 						>
 							{listVariant === "definition" && item.title ? (
 								<div className="flex flex-wrap items-baseline gap-x-1">
 									<Text as="span" variant="strong" size="sm">
 										{item.title}
 									</Text>
-									<Text as="span" variant="muted" size="sm">
-										- {item.description}
+									<Text
+										as="span"
+										variant="muted"
+										size="sm"
+										className="text-pretty"
+									>
+										{" "}
+										&mdash; {item.description}
 									</Text>
 								</div>
 							) : (
@@ -111,7 +115,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 			) : null}
 
 			{footer ? (
-				<Text variant="muted" size="sm" className="mt-4">
+				<Text variant="subtle" size="sm" className="mt-6">
 					{footer}
 				</Text>
 			) : null}

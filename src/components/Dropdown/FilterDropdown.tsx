@@ -39,51 +39,38 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 	return (
 		<div className={`flex w-full max-w-xs flex-col gap-2 ${className}`}>
 			{label ? (
-				<Text as="label" htmlFor={selectId} variant="eyebrow" size="xs">
+				<Text
+					as="label"
+					htmlFor={selectId}
+					variant="eyebrow"
+					size="xs"
+					className="md-field-label"
+				>
 					{label}
 				</Text>
 			) : null}
 
-			<div className="relative">
-				<select
-					id={selectId}
-					name={selectId}
-					value={value ?? ""}
-					onChange={handleChange}
-					disabled={disabled}
-					className="peer w-full appearance-none rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-5 py-3 text-sm font-medium text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:bg-(--surface-panel) disabled:text-(--text-subtle)"
-				>
-					<option value="" disabled={placeholder === null}>
-						{placeholder}
-					</option>
-					{options.map((option) => (
-						<option
-							key={option.value}
-							value={option.value}
-							disabled={option.disabled}
-						>
-							{option.label}
-						</option>
-					))}
-				</select>
-
-				<span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-(--text-muted) transition-colors duration-200 peer-focus:text-(--accent)">
-					<svg
-						className="h-4 w-4"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						strokeWidth={1.5}
+			<select
+				id={selectId}
+				name={selectId}
+				value={value ?? ""}
+				onChange={handleChange}
+				disabled={disabled}
+				className="md-input md-select"
+			>
+				<option value="" disabled={placeholder === null}>
+					{placeholder}
+				</option>
+				{options.map((option) => (
+					<option
+						key={option.value}
+						value={option.value}
+						disabled={option.disabled}
 					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M6 9l6 6 6-6"
-						/>
-					</svg>
-				</span>
-			</div>
+						{option.label}
+					</option>
+				))}
+			</select>
 		</div>
 	);
 };

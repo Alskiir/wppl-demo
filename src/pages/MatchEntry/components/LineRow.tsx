@@ -75,12 +75,10 @@ const LineRow = ({
 			style={getColumnStyle(columnWidths.player)}
 		>
 			<div className="flex flex-col gap-3">
-				<label className="text-[11px] uppercase tracking-wide text-(--text-muted)">
-					{label}
-				</label>
+				<span className="md-field-label">{label}</span>
 				<div className="space-y-3">
 					<div className="space-y-1 text-xs">
-						<span className="font-semibold text-(--text-subtle)">
+						<span className="md-field-label text-[0.7rem]">
 							Player 1
 						</span>
 						<PlayerSelect
@@ -99,7 +97,7 @@ const LineRow = ({
 						/>
 					</div>
 					<div className="space-y-1 text-xs">
-						<span className="font-semibold text-(--text-subtle)">
+						<span className="md-field-label text-[0.7rem]">
 							Player 2
 						</span>
 						<PlayerSelect
@@ -123,28 +121,30 @@ const LineRow = ({
 	);
 
 	return (
-		<tr className="text-sm text-(--text-secondary) odd:bg-(--surface-card) even:bg-(--surface-raised) transition-colors duration-200 hover:bg-(--surface-hover)">
+		<tr className="text-sm text-(--text-secondary) border-b border-(--border-subtle) bg-(--surface-card) transition-colors duration-200 hover:bg-(--surface-hover)">
 			<td
 				className={`${LINE_COLUMN_WIDTH_CLASS} align-top font-semibold text-(--text-secondary)`}
 				style={getColumnStyle(columnWidths.line)}
 			>
-				<div className="flex flex-col gap-2">
-					<span>Line {line.lineNumber}</span>
-					<div className="flex flex-wrap gap-2 text-[11px] font-normal">
+				<div className="flex flex-col gap-3">
+					<span className="text-base text-(--text-primary)">
+						Line {line.lineNumber}
+					</span>
+					<div className="flex flex-wrap gap-2 text-xs font-normal">
 						<button
 							type="button"
 							onClick={() => onAddGame(line.id)}
-							className="rounded-xl border border-(--border-subtle) px-2 py-1 text-(--text-secondary) transition-colors duration-200 hover:border-(--border-highlight) hover:text-(--accent)"
+							className="md-outlined-button px-3 py-2 text-xs"
 						>
-							+
+							+ Game
 						</button>
 						<button
 							type="button"
 							onClick={() => onRemoveGame(line.id)}
-							className="rounded-xl border border-(--border-subtle) px-2 py-1 text-(--text-secondary) transition-colors duration-200 hover:border-(--danger) hover:text-(--danger) disabled:cursor-not-allowed disabled:opacity-40"
+							className="md-outlined-button px-3 py-2 text-xs"
 							disabled={line.games.length <= MIN_GAMES_PER_LINE}
 						>
-							-
+							- Game
 						</button>
 					</div>
 				</div>
@@ -195,7 +195,7 @@ const LineRow = ({
 				style={getColumnStyle(columnWidths.winner)}
 			>
 				<select
-					className="w-full rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-3 py-2 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:bg-(--surface-panel) disabled:text-(--text-subtle)"
+					className="md-input md-select"
 					value={line.winnerTeamId ?? ""}
 					onChange={(event) =>
 						onWinnerChange(line.id, event.target.value)

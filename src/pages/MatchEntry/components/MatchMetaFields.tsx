@@ -15,11 +15,6 @@ type MatchMetaFieldsProps = {
 	onLocationChange: (value: string) => void;
 };
 
-const labelClassName =
-	"text-sm font-medium uppercase tracking-wide text-[var(--text-subtle)]";
-const inputClassName =
-	"w-full rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-input)] px-4 py-3 text-[var(--text-primary)] transition-colors duration-200 focus:border-[var(--border-highlight)] focus:outline-none disabled:cursor-not-allowed disabled:border-[var(--border-subtle)] disabled:bg-[var(--surface-panel)] disabled:text-[var(--text-subtle)]";
-
 const MatchMetaFields = ({
 	teams,
 	teamsLoading,
@@ -34,12 +29,15 @@ const MatchMetaFields = ({
 	onMatchTimeChange,
 	onLocationChange,
 }: MatchMetaFieldsProps) => (
-	<section className="rounded-3xl border border-(--border-strong) bg-(--surface-card) p-6">
+	<section className="md-card p-6">
 		<div className="grid gap-6 md:grid-cols-2">
-			<div className="space-y-2">
-				<label className={labelClassName}>Home Team (H)</label>
+			<div className="flex flex-col gap-2">
+				<label className="md-field-label" htmlFor="match-home-team">
+					Home Team (H)
+				</label>
 				<select
-					className={inputClassName}
+					id="match-home-team"
+					className="md-input md-select"
 					value={homeTeamId}
 					onChange={(event) => onHomeTeamChange(event.target.value)}
 				>
@@ -57,10 +55,13 @@ const MatchMetaFields = ({
 					))}
 				</select>
 			</div>
-			<div className="space-y-2">
-				<label className={labelClassName}>Away Team (A)</label>
+			<div className="flex flex-col gap-2">
+				<label className="md-field-label" htmlFor="match-away-team">
+					Away Team (A)
+				</label>
 				<select
-					className={inputClassName}
+					id="match-away-team"
+					className="md-input md-select"
 					value={awayTeamId}
 					onChange={(event) => onAwayTeamChange(event.target.value)}
 				>
@@ -81,30 +82,39 @@ const MatchMetaFields = ({
 		</div>
 
 		<div className="mt-6 grid gap-6 md:grid-cols-3">
-			<div className="space-y-2">
-				<label className={labelClassName}>Match Date</label>
+			<div className="flex flex-col gap-2">
+				<label className="md-field-label" htmlFor="match-date">
+					Match Date
+				</label>
 				<input
+					id="match-date"
 					type="date"
-					className={inputClassName}
+					className="md-input"
 					value={matchDate}
 					onChange={(event) => onMatchDateChange(event.target.value)}
 				/>
 			</div>
-			<div className="space-y-2">
-				<label className={labelClassName}>Match Time</label>
+			<div className="flex flex-col gap-2">
+				<label className="md-field-label" htmlFor="match-time">
+					Match Time
+				</label>
 				<input
+					id="match-time"
 					type="time"
-					className={inputClassName}
+					className="md-input"
 					value={matchTime}
 					onChange={(event) => onMatchTimeChange(event.target.value)}
 				/>
 			</div>
-			<div className="space-y-2 md:col-span-1">
-				<label className={labelClassName}>Location</label>
+			<div className="flex flex-col gap-2 md:col-span-1">
+				<label className="md-field-label" htmlFor="match-location">
+					Location
+				</label>
 				<input
+					id="match-location"
 					type="text"
 					placeholder="Clubhouse courts"
-					className={inputClassName}
+					className="md-input"
 					value={location}
 					onChange={(event) => onLocationChange(event.target.value)}
 				/>

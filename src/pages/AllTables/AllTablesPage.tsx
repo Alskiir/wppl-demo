@@ -144,8 +144,14 @@ function AllTablesPage() {
 	const showInlineError = Boolean(error) && hasCachedRows;
 
 	const actions = hasTables ? (
-		<div className="flex flex-col gap-2 text-right">
-			<Text as="label" htmlFor="table-select" variant="eyebrow" size="xs">
+		<div className="flex flex-col gap-2 text-right md:text-left">
+			<Text
+				as="label"
+				htmlFor="table-select"
+				variant="eyebrow"
+				size="xs"
+				className="md-field-label"
+			>
 				Select table
 			</Text>
 			<div className="flex flex-wrap gap-3">
@@ -157,7 +163,7 @@ function AllTablesPage() {
 							event.target.value as DatabaseTableName
 						)
 					}
-					className="rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-4 py-2 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:text-(--text-subtle)"
+					className="md-input md-select w-full md:w-52"
 				>
 					{availableTables.map((table) => (
 						<option key={table.name} value={table.name}>
@@ -169,7 +175,7 @@ function AllTablesPage() {
 					type="button"
 					onClick={handleRefresh}
 					disabled={!selectedTable || isLoading}
-					className="rounded-2xl border border-(--border-highlight) bg-(--surface-card) px-4 py-2 text-sm font-semibold text-(--accent) transition-colors duration-200 hover:bg-(--surface-hover) disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:text-(--text-subtle)"
+					className="md-outlined-button"
 				>
 					{isLoading ? "Refreshing..." : "Refresh"}
 				</button>

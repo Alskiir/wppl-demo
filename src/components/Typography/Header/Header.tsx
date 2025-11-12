@@ -6,23 +6,23 @@ type HeaderSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "display";
 type HeaderAlign = "left" | "center" | "right";
 
 const levelDefaults: Record<HeaderLevel, string> = {
-	1: "text-4xl md:text-5xl",
-	2: "text-3xl md:text-4xl",
-	3: "text-2xl md:text-3xl",
-	4: "text-xl md:text-2xl",
-	5: "text-lg",
-	6: "text-base",
+	1: "text-[clamp(2.5rem,4vw,3.75rem)] leading-[1.05]",
+	2: "text-[clamp(2rem,3.5vw,3rem)] leading-tight",
+	3: "text-[clamp(1.75rem,3vw,2.5rem)] leading-tight",
+	4: "text-[clamp(1.5rem,2.5vw,2rem)] leading-snug",
+	5: "text-xl leading-snug",
+	6: "text-base leading-normal",
 };
 
 const sizeClasses: Record<HeaderSize, string> = {
-	xs: "text-sm",
-	sm: "text-base",
-	md: "text-lg",
-	lg: "text-xl",
-	xl: "text-2xl",
-	"2xl": "text-3xl",
-	"3xl": "text-4xl",
-	display: "text-4xl md:text-5xl",
+	xs: "text-sm leading-snug",
+	sm: "text-base leading-snug",
+	md: "text-lg leading-snug",
+	lg: "text-2xl leading-tight",
+	xl: "text-3xl leading-tight",
+	"2xl": "text-[2.5rem] leading-tight",
+	"3xl": "text-[3rem] leading-[1.05]",
+	display: "text-[clamp(2.75rem,5vw,4.25rem)] leading-[1.02]",
 };
 
 const variantClasses: Record<HeaderVariant, string> = {
@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
 	const resolvedSize = size ? sizeClasses[size] : levelDefaults[level];
 
 	const componentClassName = [
-		"font-semibold leading-tight tracking-tight text-pretty",
+		"font-semibold tracking-tight text-balance",
 		resolvedSize,
 		variantClasses[variant],
 		alignClasses[align],

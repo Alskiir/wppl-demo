@@ -16,7 +16,7 @@ const PlayerSelect = ({
 	onChange,
 }: PlayerSelectProps) => (
 	<select
-		className="w-full rounded-2xl border border-(--border-subtle) bg-(--surface-input) px-3 py-2 text-sm text-(--text-primary) transition-colors duration-200 focus:border-(--border-highlight) focus:outline-none disabled:cursor-not-allowed disabled:border-(--border-subtle) disabled:bg-(--surface-panel) disabled:text-(--text-subtle)"
+		className="md-input md-select"
 		value={value}
 		onChange={(event) => onChange(event.target.value)}
 		disabled={disabled}
