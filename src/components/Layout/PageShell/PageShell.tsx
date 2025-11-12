@@ -3,7 +3,7 @@ import { Header, Text } from "../../Typography";
 
 interface PageShellProps {
 	title: string;
-	description?: string;
+	description?: React.ReactNode;
 	actions?: React.ReactNode;
 	children: React.ReactNode;
 	maxWidthClass?: string;
@@ -26,10 +26,14 @@ const PageShell: React.FC<PageShellProps> = ({
 				<div
 					className={`mx-auto flex ${maxWidthClass} flex-col gap-10 ${paddingClass}`}
 				>
-					<header className="md-card bg-(--surface-panel) px-6 py-6 shadow-[var(--md-sys-elevation-1)]">
+					<header className="md-card bg-(--surface-panel) px-6 py-6 shadow-(--md-sys-elevation-1)">
 						<div className="flex flex-wrap items-start justify-between gap-6">
 							<div className="flex flex-col gap-2">
-								<Header level={1} variant="primary" size="display">
+								<Header
+									level={1}
+									variant="primary"
+									size="display"
+								>
 									{title}
 								</Header>
 								{description ? (

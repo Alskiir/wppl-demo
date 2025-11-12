@@ -79,7 +79,18 @@ function AboutPage() {
 	return (
 		<PageShell
 			title="About the WPPL Demo"
-			description="A walk-through of how the scoring system behaves, who it helps, and which tools power it."
+			description={
+				<>
+					A walk-through of how the scoring system behaves, who it
+					helps, and which tools power it.
+					<hr className="my-3 w-200 h-px bg-(--border-subtle) border-0" />
+					WPPL Scoring System Demo keeps standings, rosters, match
+					sheets, and database inspection tools inside one guided
+					layout. Every screen shares the same design language, so
+					visitors can move from checking scores to entering new ones
+					without relearning the page.
+				</>
+			}
 			maxWidthClass="max-w-5xl"
 			paddingClass="px-6 md:px-10"
 		>
@@ -87,8 +98,6 @@ function AboutPage() {
 				title="What this solves"
 				description="League directors can review the latest results before planning broadcasts, captains can lock in lineups the moment play wraps, and volunteers can audit Supabase data without leaving the browser."
 			/>
-
-			<GlassCard description="WPPL Scoring System Demo keeps standings, rosters, match sheets, and database inspection tools inside one guided layout. Every screen shares the same design language, so visitors can move from checking scores to entering new ones without relearning the page." />
 
 			<div className="grid gap-6 md:grid-cols-2">
 				<GlassCard
@@ -127,12 +136,12 @@ function AboutPage() {
 					listVariant="bullet"
 				/>
 
-			<GlassCard
-				title="MailChimp + RegistrationWorks integrations"
-				description="These integrations plug communication and registration tools straight into the existing Supabase workflow:"
-				listItems={roadmap.map((item) => ({
-					description: item,
-				}))}
+				<GlassCard
+					title="MailChimp + RegistrationWorks integrations"
+					description="These integrations plug communication and registration tools straight into the existing Supabase workflow:"
+					listItems={roadmap.map((item) => ({
+						description: item,
+					}))}
 					listVariant="bullet"
 				/>
 			</div>
