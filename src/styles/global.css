@@ -458,6 +458,16 @@ input[type="number"]::-webkit-outer-spin-button {
 	);
 }
 
+.md-outlined-button.game-count-button {
+	padding: 0;
+	width: 2.25rem;
+	height: 2.25rem;
+	min-width: 2.25rem;
+	min-height: 2.25rem;
+	border-radius: 9999px;
+	gap: 0;
+}
+
 .md-text-button {
 	border: none;
 	background-color: transparent;

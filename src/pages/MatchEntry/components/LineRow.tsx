@@ -134,17 +134,17 @@ const LineRow = ({
 						<button
 							type="button"
 							onClick={() => onAddGame(line.id)}
-							className="md-outlined-button md-button--compact px-3 py-2 text-xs"
+							className="md-outlined-button md-button--compact game-count-button text-xs"
 						>
-							+ Game
+							+
 						</button>
 						<button
 							type="button"
 							onClick={() => onRemoveGame(line.id)}
-							className="md-outlined-button md-button--compact px-3 py-2 text-xs"
+							className="md-outlined-button md-button--compact game-count-button text-xs"
 							disabled={line.games.length <= MIN_GAMES_PER_LINE}
 						>
-							- Game
+							-
 						</button>
 					</div>
 				</div>
