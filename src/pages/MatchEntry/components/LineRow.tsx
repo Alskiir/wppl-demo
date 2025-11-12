@@ -184,7 +184,7 @@ const LineRow = ({
 						className={`${GAME_COLUMN_WIDTH_CLASS} align-top`}
 						style={getColumnStyle(columnWidths.game)}
 					>
-						<div className="text-xs text-(--text-subtle)">
+						<div className="flex h-full min-h-16 items-center justify-center rounded border-2 border-dotted border-(--border-subtle) px-3 py-2 mt-15.5 text-center text-xs text-(--text-subtle)">
 							Add a game to use this slot
 						</div>
 					</td>
