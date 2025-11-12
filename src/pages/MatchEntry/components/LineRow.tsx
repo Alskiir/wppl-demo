@@ -191,29 +191,41 @@ const LineRow = ({
 				);
 			})}
 			<td
-				className={COLUMN_WIDTH_CLASS}
+				className={`${COLUMN_WIDTH_CLASS} align-top`}
 				style={getColumnStyle(columnWidths.winner)}
 			>
-				<select
-					className="md-input md-input--compact md-select"
-					value={line.winnerTeamId ?? ""}
-					onChange={(event) =>
-						onWinnerChange(line.id, event.target.value)
-					}
-					disabled={!homeTeamId || !awayTeamId}
-				>
-					<option value="">Select winner</option>
-					{awayTeamId ? (
-						<option value={awayTeamId}>
-							Team A &mdash; {awayTeam?.name ?? "Away"}
-						</option>
-					) : null}
-					{homeTeamId ? (
-						<option value={homeTeamId}>
-							Team H &mdash; {homeTeam?.name ?? "Home"}
-						</option>
-					) : null}
-				</select>
+				<div className="flex flex-col gap-3">
+					<span className="md-field-label">Winner</span>
+					<div className="space-y-3">
+						<div className="space-y-1 text-xs">
+							<span className="md-field-label text-[0.7rem] opacity-0">
+								Winning Team
+							</span>
+							<select
+								className="md-input md-input--compact md-select"
+								value={line.winnerTeamId ?? ""}
+								onChange={(event) =>
+									onWinnerChange(line.id, event.target.value)
+								}
+								disabled={!homeTeamId || !awayTeamId}
+							>
+								<option value="">Select winner</option>
+								{awayTeamId ? (
+									<option value={awayTeamId}>
+										Team A &mdash;{" "}
+										{awayTeam?.name ?? "Away"}
+									</option>
+								) : null}
+								{homeTeamId ? (
+									<option value={homeTeamId}>
+										Team H &mdash;{" "}
+										{homeTeam?.name ?? "Home"}
+									</option>
+								) : null}
+							</select>
+						</div>
+					</div>
+				</div>
 			</td>
 		</tr>
 	);
