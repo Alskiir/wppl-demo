@@ -1,4 +1,3 @@
-export * from "./Nav";
 export * from "./Table";
 export * from "./Dropdown";
 export * from "./Layout";
