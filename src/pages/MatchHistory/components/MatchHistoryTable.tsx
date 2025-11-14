@@ -1,4 +1,5 @@
-import { Table, Text } from "../../../components";
+import { useMemo } from "react";
+import { Table, Text, type TableColumn } from "../../../components";
 import type { MatchHistoryEntry, MatchResult } from "../types";
 
 type MatchHistoryTableProps = {
@@ -18,15 +19,6 @@ const HeaderLabel = ({ label, hint }: { label: string; hint?: string }) => (
 		) : null}
 	</span>
 );
-
-const headers = [
-	<HeaderLabel key="date" label="Date" />,
-	<HeaderLabel key="opponent" label="Opponent" />,
-	<HeaderLabel key="venue" label="Venue" />,
-	<HeaderLabel key="lines" label="Lines" hint="(Win / Loss)" />,
-	<HeaderLabel key="games" label="Games" hint="(Win / Loss)" />,
-	<HeaderLabel key="points" label="Points Earned" />,
-];
 
 const resultLabelMap: Record<MatchResult, string> = {
 	win: "Win",
@@ -95,38 +87,102 @@ const ResultBadge = ({ result }: { result: MatchResult }) => (
 	</span>
 );
 
-function MatchHistoryTable({ rows, teamName }: MatchHistoryTableProps) {
-	const safeTeamName = teamName?.trim().length
-		? teamName.trim()
-		: "Selected Team";
+const buildOpponentCell = (row: MatchHistoryEntry) => (
+	<div className="flex flex-col gap-1">
+		<Text as="span" variant="strong" size="sm">
+			{row.opponentName}
+		</Text>
+		<Text as="span" variant="muted" size="xs">
+			{row.isHomeMatch ? "Hosting" : "Away match"}
+		</Text>
+	</div>
+);
 
-	const tableRows = rows.map((row) => {
-		const dateLabel = formatDateLabel(row.matchDate);
-		const timeLabel = formatTimeLabel(row.matchTime);
+const buildVenueCell = (row: MatchHistoryEntry) => (
+	<div className="flex flex-col gap-1">
+		<Text as="span" variant="strong" size="sm">
+			{row.location ?? "TBD"}
+		</Text>
+		<Text as="span" variant="muted" size="xs">
+			{row.isHomeMatch ? "Home" : "Away"}
+		</Text>
+	</div>
+);
 
-		const opponentCell = (
-			<div className="flex flex-col gap-1">
-				<Text as="span" variant="strong" size="sm">
-					{row.opponentName}
-				</Text>
-				<Text as="span" variant="muted" size="xs">
-					{row.isHomeMatch ? "Hosting" : "Away match"}
-				</Text>
-			</div>
-		);
+const getMatchTimestamp = (row: MatchHistoryEntry) => {
+	const [year, month, day] = row.matchDate?.split("-").map(Number) ?? [];
+	const [hours, minutes] = row.matchTime?.split(":").map(Number) ?? [];
 
-		const venueCell = (
-			<div className="flex flex-col gap-1">
-				<Text as="span" variant="strong" size="sm">
-					{row.location ?? "TBD"}
-				</Text>
-				<Text as="span" variant="muted" size="xs">
-					{row.isHomeMatch ? "Home" : "Away"}
-				</Text>
-			</div>
-		);
+	if (
+		!Number.isFinite(year) ||
+		!Number.isFinite(month) ||
+		!Number.isFinite(day)
+	) {
+		return 0;
+	}
 
-		const linesCell = (
+	const normalizedHours = Number.isFinite(hours) ? hours : 0;
+	const normalizedMinutes = Number.isFinite(minutes) ? minutes : 0;
+
+	return Date.UTC(
+		year!,
+		(month ?? 1) - 1,
+		day!,
+		normalizedHours,
+		normalizedMinutes
+	);
+};
+
+const compareText = (a?: string | null, b?: string | null) => {
+	const aValue = a?.toLowerCase().trim() ?? "";
+	const bValue = b?.toLowerCase().trim() ?? "";
+	return aValue.localeCompare(bValue);
+};
+
+const buildColumns = (
+	safeTeamName: string
+): TableColumn<MatchHistoryEntry>[] => [
+	{
+		id: "date",
+		header: <HeaderLabel label="Date" />,
+		align: "left",
+		sortFn: (a, b) => getMatchTimestamp(a) - getMatchTimestamp(b),
+		accessor: (row) => {
+			const dateLabel = formatDateLabel(row.matchDate);
+			const timeLabel = formatTimeLabel(row.matchTime);
+
+			return (
+				<div className="flex flex-col gap-1">
+					<Text as="span" variant="strong" size="sm">
+						{dateLabel}
+					</Text>
+					{timeLabel ? (
+						<Text as="span" variant="muted" size="xs">
+							{timeLabel}
+						</Text>
+					) : null}
+				</div>
+			);
+		},
+	},
+	{
+		id: "opponent",
+		header: <HeaderLabel label="Opponent" />,
+		align: "left",
+		sortFn: (a, b) => compareText(a.opponentName, b.opponentName),
+		accessor: (row) => buildOpponentCell(row),
+	},
+	{
+		id: "venue",
+		header: <HeaderLabel label="Venue" />,
+		align: "left",
+		accessor: (row) => buildVenueCell(row),
+	},
+	{
+		id: "lines",
+		header: <HeaderLabel label="Lines" hint="(Win / Loss)" />,
+		align: "left",
+		accessor: (row) => (
 			<div className="flex flex-col gap-1">
 				<div className="flex flex-wrap items-center gap-x-2 gap-y-2">
 					<Text as="span" variant="strong" size="lg">
@@ -145,10 +201,14 @@ function MatchHistoryTable({ rows, teamName }: MatchHistoryTableProps) {
 					{row.opponentName}
 				</Text>
 			</div>
-		);
-
-		const gamesCell = (
-			<div className="flex flex-col gap-1 items-center">
+		),
+	},
+	{
+		id: "games",
+		header: <HeaderLabel label="Games" hint="(Win / Loss)" />,
+		align: "center",
+		accessor: (row) => (
+			<div className="flex flex-col items-center gap-1">
 				<div className="flex items-center gap-x-2">
 					<Text as="span" variant="strong" size="lg">
 						{row.gamesWon}
@@ -161,36 +221,43 @@ function MatchHistoryTable({ rows, teamName }: MatchHistoryTableProps) {
 					</Text>
 				</div>
 			</div>
-		);
-
-		const pointsCell = (
-			<div className="flex flex-col gap-1 items-center">
+		),
+	},
+	{
+		id: "points",
+		header: <HeaderLabel label="Points Earned" />,
+		align: "center",
+		accessor: (row) => (
+			<div className="flex flex-col items-center gap-1">
 				<Text as="span" variant="strong" size="md">
 					{row.pointsEarned}
 				</Text>
 			</div>
-		);
+		),
+	},
+];
 
-		return [
-			<div className="flex flex-col gap-1" key={`${row.id}-date`}>
-				<Text as="span" variant="strong" size="sm">
-					{dateLabel}
+function MatchHistoryTable({ rows, teamName }: MatchHistoryTableProps) {
+	const safeTeamName = teamName?.trim().length
+		? teamName.trim()
+		: "Selected Team";
+
+	const columns = useMemo(() => buildColumns(safeTeamName), [safeTeamName]);
+
+	return (
+		<Table
+			columns={columns}
+			data={rows}
+			initialSortColumnId="date"
+			initialSortDirection="desc"
+			getRowId={(row) => row.id}
+			emptyMessage={
+				<Text variant="caption" size="sm">
+					No matches recorded for this team.
 				</Text>
-				{timeLabel ? (
-					<Text as="span" variant="muted" size="xs">
-						{timeLabel}
-					</Text>
-				) : null}
-			</div>,
-			opponentCell,
-			venueCell,
-			linesCell,
-			gamesCell,
-			pointsCell,
-		];
-	});
-
-	return <Table headers={headers} data={tableRows} />;
+			}
+		/>
+	);
 }
 
 export default MatchHistoryTable;

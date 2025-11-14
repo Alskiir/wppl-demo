@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { GlassCard, PageShell, Table, Text } from "../../components";
+import {
+	GlassCard,
+	PageShell,
+	Table,
+	Text,
+	type TableColumn,
+} from "../../components";
 import {
 	formatTableCellValue,
 	formatTableColumnLabel,
@@ -14,6 +20,83 @@ import {
 const descriptorMap = new Map<DatabaseTableName, TableDescriptor>(
 	databaseTables.map((descriptor) => [descriptor.name, descriptor])
 );
+const DEFAULT_PAGE_SIZE = 25;
+type GenericRow = Record<string, unknown>;
+const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+const ROW_ID_CANDIDATES = [
+	"id",
+	"ID",
+	"Id",
+	"_id",
+	"uuid",
+	"UUID",
+	"key",
+] as const;
+
+const getRowIdFromRecord = (row: GenericRow, index: number) => {
+	for (const key of ROW_ID_CANDIDATES) {
+		const value = row[key];
+		if (typeof value === "string" || typeof value === "number") {
+			return value;
+		}
+	}
+
+	return `${index}`;
+};
+
+const parseNumericValue = (value: unknown) => {
+	if (typeof value === "number" && Number.isFinite(value)) {
+		return value;
+	}
+
+	if (typeof value === "string") {
+		const trimmed = value.trim();
+		if (!trimmed.length) return null;
+		const parsed = Number(trimmed);
+		if (Number.isFinite(parsed)) {
+			return parsed;
+		}
+	}
+
+	return null;
+};
+
+const normalizeStringValue = (value: unknown): string => {
+	if (typeof value === "string") {
+		return value.trim();
+	}
+
+	if (value === null || typeof value === "undefined") {
+		return "";
+	}
+
+	if (value instanceof Date) {
+		return value.toISOString();
+	}
+
+	if (typeof value === "object") {
+		try {
+			return JSON.stringify(value);
+		} catch {
+			return "";
+		}
+	}
+
+	return String(value);
+};
+
+const compareRecordValues = (a: unknown, b: unknown) => {
+	const aNumber = parseNumericValue(a);
+	const bNumber = parseNumericValue(b);
+
+	if (aNumber !== null && bNumber !== null) {
+		return aNumber - bNumber;
+	}
+
+	const aString = normalizeStringValue(a);
+	const bString = normalizeStringValue(b);
+	return collator.compare(aString, bString);
+};
 
 const buildColumnOrder = (
 	rows: Record<string, unknown>[],
@@ -72,6 +155,16 @@ function AllTablesPage() {
 		() => buildColumnOrder(visibleRows, activeDescriptor),
 		[visibleRows, activeDescriptor]
 	);
+	const columns = useMemo<TableColumn<GenericRow>[]>(() => {
+		return columnOrder.map((column, index) => ({
+			id: column,
+			header: formatTableColumnLabel(column),
+			align: index === 0 ? "left" : "center",
+			accessor: (row) => formatTableCellValue(row[column]),
+			sortFn: (a, b) => compareRecordValues(a[column], b[column]),
+		}));
+	}, [columnOrder]);
+	const defaultSortColumnId = columns.length > 0 ? columns[0]!.id : undefined;
 
 	useEffect(() => {
 		if (!selectedTable) return;
@@ -119,15 +212,16 @@ function AllTablesPage() {
 		setReloadVersion((prev) => prev + 1);
 	};
 
-	const tableHeaders = columnOrder.map((column) =>
-		formatTableColumnLabel(column)
-	);
-	const tableRows = visibleRows.map((row) =>
-		columnOrder.map((column) => formatTableCellValue(row[column]))
-	);
 	const isLoadingWithoutCache = isLoading && !hasCachedRows;
+	const showTableSkeleton = isLoading && hasCachedRows;
 	const showBlockingError = Boolean(error) && !hasCachedRows;
 	const showInlineError = Boolean(error) && hasCachedRows;
+	const tableEmptyMessage = (
+		<Text variant="caption" size="sm">
+			No rows returned for{" "}
+			{activeDescriptor?.label ?? selectedTable ?? "the selected table"}.
+		</Text>
+	);
 
 	const actions = hasTables ? (
 		<div className="flex flex-col gap-2 text-right md:text-left">
@@ -224,7 +318,17 @@ function AllTablesPage() {
 					]}
 					footer="Results show the latest data returned by the PostgreSQL database. Large tables may be truncated depending on server limits."
 				/>
-				<Table headers={tableHeaders} data={tableRows} />
+				<Table
+					key={selectedTable ?? "all-tables"}
+					columns={columns}
+					data={visibleRows}
+					pageSize={DEFAULT_PAGE_SIZE}
+					isLoading={showTableSkeleton}
+					emptyMessage={tableEmptyMessage}
+					initialSortColumnId={defaultSortColumnId}
+					initialSortDirection="asc"
+					getRowId={getRowIdFromRecord}
+				/>
 			</div>
 		);
 	}
