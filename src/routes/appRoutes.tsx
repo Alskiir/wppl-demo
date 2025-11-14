@@ -4,6 +4,7 @@ import {
 	AllTablesPage,
 	HomePage,
 	MatchEntryPage,
+	MatchHistoryPage,
 	StandingsPage,
 	TeamsPage,
 } from "../pages";
@@ -32,6 +33,10 @@ const routeMeta = defineRoutes({
 	teams: {
 		component: TeamsPage,
 		label: "Teams",
+	},
+	"match-history": {
+		component: MatchHistoryPage,
+		label: "Match History",
 	},
 	"match-entry": {
 		component: MatchEntryPage,
