@@ -12,7 +12,7 @@ function Standings() {
 			<GlassCard
 				title="Standings unavailable"
 				description={error}
-				footer="Confirm that the Supabase view team_standings exists and that your Vite env variables are set."
+				footer="Confirm that the view team_standings exists and that .env variables are set."
 			/>
 		);
 	} else if (isLoading) {

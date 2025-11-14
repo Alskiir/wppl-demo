@@ -184,7 +184,7 @@ function AllTablesPage() {
 			<GlassCard
 				title="Unable to load data"
 				description={error ?? undefined}
-				footer="Confirm your Supabase credentials are configured in the .env file."
+				footer="Confirm credentials are configured in the .env file."
 			/>
 		);
 	} else if (isLoadingWithoutCache) {
@@ -209,7 +209,7 @@ function AllTablesPage() {
 					title={activeDescriptor?.label ?? "Table details"}
 					description={
 						activeDescriptor?.description ??
-						"Raw rows returned directly from Supabase."
+						"Raw rows returned directly from the PostgreSQL database."
 					}
 					details={[
 						{
@@ -222,7 +222,7 @@ function AllTablesPage() {
 						},
 						{ label: "Columns", value: String(columnOrder.length) },
 					]}
-					footer="Results show the latest data returned by Supabase. Large tables may be truncated depending on server limits."
+					footer="Results show the latest data returned by the PostgreSQL database. Large tables may be truncated depending on server limits."
 				/>
 				<Table headers={tableHeaders} data={tableRows} />
 			</div>
@@ -232,7 +232,7 @@ function AllTablesPage() {
 	return (
 		<PageShell
 			title="All Tables"
-			description="Inspect every Supabase table backing the WPPL demo. Use the dropdown to switch between raw datasets."
+			description="Inspect every table backing the demo. Use the dropdown to switch between raw datasets."
 			actions={actions}
 		>
 			{content}

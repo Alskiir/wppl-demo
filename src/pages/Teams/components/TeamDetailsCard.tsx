@@ -7,7 +7,7 @@ type TeamDetailsCardProps = {
 };
 
 function TeamDetailsCard({ team, rosterCount }: TeamDetailsCardProps) {
-	const description = team.location ?? "WPPL team roster powered by Supabase";
+	const description = team.location ?? "Team roster powered by PostgreSQL.";
 
 	return (
 		<GlassCard

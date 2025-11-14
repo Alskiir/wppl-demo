@@ -24,12 +24,12 @@ function MatchHistoryPage() {
 			<GlassCard
 				title="Unable to load match history"
 				description={error}
-				footer="Check your Supabase credentials and confirm that the match, match_line, and team tables are accessible."
+				footer="Check credentials and confirm that the match, match_line, and team tables are accessible."
 			/>
 		);
 	} else if (!hasTeams && !isLoadingTeams) {
 		content = (
-			<GlassCard description="No teams are available yet. Add teams to Supabase to review their match history." />
+			<GlassCard description="No teams are available yet. Add teams to the database to review their match history." />
 		);
 	} else if (isLoading) {
 		content = <GlassCard description="Loading match history..." />;

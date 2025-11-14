@@ -9,7 +9,7 @@ const siteSections = [
 	{
 		title: "Standings",
 		description:
-			"Pulls the Supabase view team_standings into a ready-made table, sorts by total points, and surfaces helpful error cards if credentials fail.",
+			"Pulls the view team_standings into a ready-made table, sorts by total points, and surfaces helpful error cards if credentials fail.",
 	},
 	{
 		title: "Teams",
@@ -24,7 +24,7 @@ const siteSections = [
 	{
 		title: "All Tables",
 		description:
-			"Lists every configured Supabase table (team, person, match, line_game, and more) so staff can browse raw rows without touching SQL.",
+			"Lists every configured table (team, person, match, line_game, and more) so staff can browse raw rows without touching SQL.",
 	},
 ];
 
@@ -33,8 +33,8 @@ const matchEntryHighlights = [
 	"Line builder adds or removes pairings, re-numbers each row, and keeps at least one line ready so the sheet always has a starting point.",
 	"Game columns include plus and minus buttons beside each score, which helps tablet users update tallies without typing tiny numbers.",
 	"Every edit re-checks the score math so line winners and the overall match winner are confirmed before saving.",
-	"Autofill button grabs two teams and their players from Supabase, seeds believable scores, and fills the location field for quick demos.",
-	"Submit button chains three Supabase inserts (match, match_line, line_game) and shows success or error banners right inside the form.",
+	"Autofill button grabs two teams and their players from the PostgreSQL database, seeds believable scores, and fills the location field for quick demos.",
+	"Submit button chains three inserts (match, match_line, line_game) and shows success or error banners right inside the form.",
 ];
 
 const dataPractices = [
@@ -62,7 +62,7 @@ const dataPractices = [
 
 const capabilityHighlights = [
 	"Keeps league directors, captains, and volunteers on one responsive site instead of juggling spreadsheets.",
-	"Reads standings, rosters, and raw tables directly from Supabase and writes structured match data back the moment a form is submitted.",
+	"Reads standings, rosters, and raw tables directly from the PostgreSQL database and writes structured match data back the moment a form is submitted.",
 	"Auto-builds tables and column orders based on whatever the database returns, so the All Tables view stays flexible.",
 	"Surfaces banner messaging whenever data fails to load, giving staff clear next steps without digging into developer tools.",
 	"Pairs modern styling with accessible controls (labels, focus states, inline help) so the experience works for non-technical staff.",
@@ -71,24 +71,24 @@ const capabilityHighlights = [
 const roadmap = [
 	"Push every verified roster into a MailChimp audience so directors can fire off division-wide updates without exporting CSVs.",
 	"Trigger MailChimp automations whenever a match submission lands, sending recaps and reminders that reuse the Match Entry data.",
-	"Use the RegistrationWorks API to import registrations directly into Supabase tables, guaranteeing that players, captains, and teams stay synchronized.",
+	"Use the RegistrationWorks API to import registrations directly into PostgreSQL tables, guaranteeing that players, captains, and teams stay synchronized.",
 	"Run RegistrationWorks checks when captains pick players, blocking ineligible athletes and showing a friendly GlassCard prompt inside the form.",
 ];
 
 function AboutPage() {
 	return (
 		<PageShell
-			title="About the WPPL Demo"
+			title="About the Scoring System Demo"
 			description={
 				<>
 					A walk-through of how the scoring system behaves, who it
 					helps, and which tools power it.
 					<hr className="my-3 w-200 h-px bg-(--border-subtle) border-0" />
-					WPPL Scoring System Demo keeps standings, rosters, match
-					sheets, and database inspection tools inside one guided
-					layout. Every screen shares the same design language, so
-					visitors can move from checking scores to entering new ones
-					without relearning the page.
+					Scoring System Demo keeps standings, rosters, match sheets,
+					and database inspection tools inside one guided layout.
+					Every screen shares the same design language, so visitors
+					can move from checking scores to entering new ones without
+					relearning the page.
 				</>
 			}
 			maxWidthClass="max-w-5xl"
@@ -96,7 +96,7 @@ function AboutPage() {
 		>
 			<GlassCard
 				title="What this solves"
-				description="League directors can review the latest results before planning broadcasts, captains can lock in lineups the moment play wraps, and volunteers can audit Supabase data without leaving the browser."
+				description="League directors can review the latest results before planning broadcasts, captains can lock in lineups the moment play wraps, and volunteers can audit data without leaving the browser."
 			/>
 
 			<div className="grid gap-6 md:grid-cols-2">
@@ -138,7 +138,7 @@ function AboutPage() {
 
 				<GlassCard
 					title="MailChimp + RegistrationWorks integrations"
-					description="These integrations plug communication and registration tools straight into the existing Supabase workflow:"
+					description="These integrations plug communication and registration tools straight into the existing PostgreSQL workflow:"
 					listItems={roadmap.map((item) => ({
 						description: item,
 					}))}

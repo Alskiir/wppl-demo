@@ -50,7 +50,7 @@ export async function resolveSupabase<T>(
 		}
 
 		throw new Error(
-			options.errorMessage ?? "Supabase returned no data for this query."
+			options.errorMessage ?? "No data returned for this query."
 		);
 	}
 

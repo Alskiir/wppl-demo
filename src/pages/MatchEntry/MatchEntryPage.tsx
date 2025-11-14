@@ -42,7 +42,7 @@ const MatchEntryPage = () => {
 	return (
 		<PageShell
 			title={matchTitle}
-			description="Enter WPPL match results, lineups, and per-game scores. Winners auto-calculate but stay editable."
+			description="Enter match results, lineups, and per-game scores. Winners auto-calculate but stay editable."
 			maxWidthClass="max-w-7xl"
 		>
 			<form className="space-y-10" onSubmit={handleSubmit}>

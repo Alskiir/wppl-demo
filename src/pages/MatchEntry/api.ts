@@ -126,7 +126,7 @@ const insertLinesForMatch = async (matchId: string, lines: LineFormState[]) => {
 	);
 
 	if (!lineRows.length) {
-		throw new Error("Unable to create line rows. Supabase returned none.");
+		throw new Error("Unable to create line rows. Database returned none.");
 	}
 
 	return lineRows;

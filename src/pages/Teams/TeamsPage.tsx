@@ -37,7 +37,7 @@ function TeamsPage() {
 				<GlassCard
 					title="Something went wrong"
 					description={error}
-					footer="Confirm your Supabase credentials are configured in the .env file."
+					footer="Confirm credentials are configured in the .env file."
 				/>
 			) : isLoading ? (
 				<GlassCard description="Loading team information..." />

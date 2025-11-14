@@ -68,7 +68,7 @@ export function useStandingsData(): UseStandingsDataResult {
 				console.error(err);
 				if (isMounted) {
 					setError(
-						"Unable to load standings. Please confirm your Supabase credentials and try again."
+						"Unable to load standings. Please confirm credentials and try again."
 					);
 					setStandings([]);
 				}

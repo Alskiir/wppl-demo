@@ -139,7 +139,7 @@ export const useMatchEntryForm = () => {
 				console.error(error);
 				setToast({
 					type: "error",
-					message: "Unable to load teams from Supabase.",
+					message: "Unable to load teams.",
 				});
 			} finally {
 				if (isMounted) {

@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
 							size="lg"
 							className="text-(--text-primary) transition-colors duration-300 group-hover:text-(--accent)"
 						>
-							WPPL Scoring System Demo
+							Pickleball Scoring System
 						</Text>
 					</Link>
 				</div>
