@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Text } from "../Typography";
+import HeaderLabel from "./HeaderLabel";
 
 export type TableRow = Array<React.ReactNode>;
 export type SortDirection = "asc" | "desc";
@@ -61,7 +62,33 @@ const alignmentClassMap: Record<
 	center: "text-center",
 	right: "text-right",
 };
+type ColumnAlignment = keyof typeof alignmentClassMap;
+const headerJustifyClassMap: Record<ColumnAlignment, string> = {
+	left: "justify-start text-left",
+	center: "justify-center text-center",
+	right: "justify-end text-right",
+};
+const sortableButtonPaddingMap: Record<ColumnAlignment, string> = {
+	left: "pl-2 pr-8",
+	center: "px-8",
+	right: "pl-8 pr-2",
+};
 const emptyColumns: TableColumn<never>[] = [];
+
+const renderHeaderContent = (
+	content: React.ReactNode,
+	alignment: ColumnAlignment
+) => {
+	if (content === null || typeof content === "undefined") {
+		return null;
+	}
+
+	if (typeof content === "string" || typeof content === "number") {
+		return <HeaderLabel label={String(content)} align={alignment} />;
+	}
+
+	return content;
+};
 
 const Table = <T,>({
 	className = "",
@@ -89,11 +116,29 @@ const Table = <T,>({
 		typeof pageSize === "number" && pageSize > 0
 			? Math.max(1, Math.floor(pageSize))
 			: undefined;
+	const firstSortableColumnId = hasColumnDefinitions
+		? resolvedColumns.find((column) => typeof column.sortFn === "function")
+				?.id ?? null
+		: null;
+	const resolvedInitialColumnId =
+		hasColumnDefinitions &&
+		initialSortColumnId &&
+		resolvedColumns.some(
+			(column) =>
+				column.id === initialSortColumnId &&
+				typeof column.sortFn === "function"
+		)
+			? initialSortColumnId
+			: firstSortableColumnId;
+	const resolvedInitialDirection =
+		initialSortColumnId && resolvedInitialColumnId === initialSortColumnId
+			? initialSortDirection
+			: "asc";
 	const [sortState, setSortState] = useState<SortState | null>(() =>
-		hasColumnDefinitions && initialSortColumnId
+		hasColumnDefinitions && resolvedInitialColumnId
 			? {
-					columnId: initialSortColumnId,
-					direction: initialSortDirection,
+					columnId: resolvedInitialColumnId,
+					direction: resolvedInitialDirection,
 			  }
 			: null
 	);
@@ -104,36 +149,36 @@ const Table = <T,>({
 
 	useEffect(() => {
 		if (!hasColumnDefinitions) {
+			setSortState(null);
 			return;
 		}
 
 		setSortState((previous) => {
 			if (
 				previous &&
-				resolvedColumns.some((column) => column.id === previous.columnId)
+				resolvedColumns.some(
+					(column) =>
+						column.id === previous.columnId &&
+						typeof column.sortFn === "function"
+				)
 			) {
 				return previous;
 			}
 
-			if (
-				initialSortColumnId &&
-				resolvedColumns.some(
-					(column) => column.id === initialSortColumnId
-				)
-			) {
-				return {
-					columnId: initialSortColumnId,
-					direction: initialSortDirection,
-				};
+			if (!resolvedInitialColumnId) {
+				return null;
 			}
 
-			return null;
+			return {
+				columnId: resolvedInitialColumnId,
+				direction: resolvedInitialDirection,
+			};
 		});
 	}, [
 		hasColumnDefinitions,
-		initialSortColumnId,
-		initialSortDirection,
 		resolvedColumns,
+		resolvedInitialColumnId,
+		resolvedInitialDirection,
 	]);
 
 	const sortedData = useMemo(() => {
@@ -243,9 +288,16 @@ const Table = <T,>({
 										const direction = isActive
 											? sortState?.direction
 											: null;
-										const alignment =
+										const alignment: ColumnAlignment =
 											column.align ??
 											(index === 0 ? "left" : "center");
+										const headerContent =
+											renderHeaderContent(
+												column.header,
+												alignment
+											);
+										const headerJustifyClass =
+											headerJustifyClassMap[alignment];
 
 										return (
 											<th
@@ -256,6 +308,16 @@ const Table = <T,>({
 													column.headerClassName ?? ""
 												}`}
 												scope="col"
+												aria-sort={
+													canSort
+														? isActive
+															? direction ===
+															  "asc"
+																? "ascending"
+																: "descending"
+															: "none"
+														: undefined
+												}
 											>
 												{canSort ? (
 													<button
@@ -265,54 +327,64 @@ const Table = <T,>({
 																column.id
 															)
 														}
-														className="inline-flex items-center gap-1 text-left font-semibold text-(--text-primary)"
+														className={`group relative flex w-full items-center py-1 font-semibold text-(--text-primary) transition-colors duration-150 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${sortableButtonPaddingMap[alignment]}`}
+														aria-pressed={Boolean(
+															isActive
+														)}
 													>
-														<Text
-															as="span"
-															variant="tableHeader"
-															size="xs"
+														<span
+															className={`flex w-full items-center ${headerJustifyClass}`}
 														>
-															{column.header}
-														</Text>
-														{direction ? (
+															{headerContent}
+														</span>
+														<span
+															aria-hidden="true"
+															className="pointer-events-none absolute right-1 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[0.8rem] text-(--text-muted)"
+														>
 															<span
-																aria-hidden="true"
-																className="text-(--text-muted)"
+																className={`transition-opacity duration-150 ${
+																	direction
+																		? "opacity-100"
+																		: "opacity-0"
+																}`}
 															>
 																{direction ===
-																"asc"
-																	? "^"
-																	: "v"}
+																"desc"
+																	? "v"
+																	: "^"}
 															</span>
-														) : null}
+														</span>
 													</button>
 												) : (
-													<Text
-														as="span"
-														variant="tableHeader"
-														size="xs"
+													<span
+														className={`flex w-full items-center ${headerJustifyClass}`}
 													>
-														{column.header}
-													</Text>
+														{headerContent}
+													</span>
 												)}
 											</th>
 										);
 								  })
-								: headers?.map((header, index) => (
-										<th
-											key={`table-header-${index}`}
-											className="px-6 py-4 text-center first:text-left"
-											scope="col"
-										>
-											<Text
-												as="span"
-												variant="tableHeader"
-												size="xs"
+								: headers?.map((header, index) => {
+										const alignment: ColumnAlignment =
+											index === 0 ? "left" : "center";
+										return (
+											<th
+												key={`table-header-${index}`}
+												className={`px-6 py-4 ${alignmentClassMap[alignment]}`}
+												scope="col"
 											>
-												{header}
-											</Text>
-										</th>
-								  ))}
+												<span
+													className={`flex w-full items-center ${headerJustifyClassMap[alignment]}`}
+												>
+													{renderHeaderContent(
+														header,
+														alignment
+													)}
+												</span>
+											</th>
+										);
+								  })}
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-(--border-subtle)">

@@ -1,24 +1,16 @@
 import { useMemo } from "react";
-import { Table, Text, type TableColumn } from "../../../components";
+import {
+	HeaderLabel,
+	Table,
+	Text,
+	type TableColumn,
+} from "../../../components";
 import type { MatchHistoryEntry, MatchResult } from "../types";
 
 type MatchHistoryTableProps = {
 	rows: MatchHistoryEntry[];
 	teamName?: string;
 };
-
-const HeaderLabel = ({ label, hint }: { label: string; hint?: string }) => (
-	<span className="flex flex-col items-center leading-tight text-center">
-		<span className="text-[0.9rem] font-semibold text-(--text-primary)">
-			{label}
-		</span>
-		{hint ? (
-			<span className="text-[0.65rem] font-normal text-(--text-muted)">
-				{hint}
-			</span>
-		) : null}
-	</span>
-);
 
 const resultLabelMap: Record<MatchResult, string> = {
 	win: "Win",
@@ -145,7 +137,7 @@ const buildColumns = (
 	{
 		id: "date",
 		header: <HeaderLabel label="Date" />,
-		align: "left",
+		align: "center",
 		sortFn: (a, b) => getMatchTimestamp(a) - getMatchTimestamp(b),
 		accessor: (row) => {
 			const dateLabel = formatDateLabel(row.matchDate);
@@ -168,20 +160,20 @@ const buildColumns = (
 	{
 		id: "opponent",
 		header: <HeaderLabel label="Opponent" />,
-		align: "left",
+		align: "center",
 		sortFn: (a, b) => compareText(a.opponentName, b.opponentName),
 		accessor: (row) => buildOpponentCell(row),
 	},
 	{
 		id: "venue",
 		header: <HeaderLabel label="Venue" />,
-		align: "left",
+		align: "center",
 		accessor: (row) => buildVenueCell(row),
 	},
 	{
 		id: "lines",
 		header: <HeaderLabel label="Lines" hint="(Win / Loss)" />,
-		align: "left",
+		align: "center",
 		accessor: (row) => (
 			<div className="flex flex-col gap-1">
 				<div className="flex flex-wrap items-center gap-x-2 gap-y-2">
