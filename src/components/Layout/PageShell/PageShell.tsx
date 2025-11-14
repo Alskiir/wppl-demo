@@ -4,6 +4,7 @@ import { Header, Text } from "../../Typography";
 interface PageShellProps {
 	title: string;
 	description?: React.ReactNode;
+	descriptionAs?: React.ElementType;
 	actions?: React.ReactNode;
 	children: React.ReactNode;
 	maxWidthClass?: string;
@@ -14,6 +15,7 @@ interface PageShellProps {
 const PageShell: React.FC<PageShellProps> = ({
 	title,
 	description,
+	descriptionAs,
 	actions,
 	children,
 	maxWidthClass = "max-w-6xl",
@@ -37,7 +39,11 @@ const PageShell: React.FC<PageShellProps> = ({
 									{title}
 								</Header>
 								{description ? (
-									<Text variant="muted" size="sm">
+									<Text
+										as={descriptionAs}
+										variant="muted"
+										size="sm"
+									>
 										{description}
 									</Text>
 								) : null}

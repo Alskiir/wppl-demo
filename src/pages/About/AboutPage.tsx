@@ -91,6 +91,7 @@ function AboutPage() {
 					relearning the page.
 				</>
 			}
+			descriptionAs="div"
 			maxWidthClass="max-w-5xl"
 			paddingClass="px-6 md:px-10"
 		>
