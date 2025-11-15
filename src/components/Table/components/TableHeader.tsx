@@ -47,11 +47,24 @@ const TableHeader = <T,>({
 						const hoverHighlightClasses = canSort
 							? "transition-colors duration-150 hover:bg-(--surface-hover) focus-within:bg-(--surface-hover)"
 							: "";
+						const buttonStateClasses = [
+							"table-header-button",
+							isActive ? "table-header-button--active" : "",
+						]
+							.filter(Boolean)
+							.join(" ");
+						const sortIconColorClass = isActive
+							? "text-(--md-sys-color-on-primary-container)"
+							: "text-(--text-muted)";
 
 						return (
 							<th
 								key={column.id}
-								className={`p-0 ${alignmentClassMap[alignment]} ${column.headerClassName ?? ""} ${hoverHighlightClasses}`}
+								className={`p-0 ${
+									alignmentClassMap[alignment]
+								} ${
+									column.headerClassName ?? ""
+								} ${hoverHighlightClasses}`}
 								scope="col"
 								aria-sort={
 									canSort
@@ -67,7 +80,7 @@ const TableHeader = <T,>({
 									<button
 										type="button"
 										onClick={() => onSort(column.id)}
-										className={`group relative flex h-full w-full items-center ${headerPaddingClasses} bg-transparent font-semibold text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
+										className={`group relative flex h-full w-full items-center ${headerPaddingClasses} font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${buttonStateClasses}`}
 										aria-pressed={Boolean(isActive)}
 										style={headerMinHeightStyle}
 									>
@@ -78,7 +91,7 @@ const TableHeader = <T,>({
 										</span>
 										<span
 											aria-hidden="true"
-											className="pointer-events-none absolute right-4 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[0.8rem] text-(--text-muted)"
+											className={`pointer-events-none absolute right-4 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[0.8rem] ${sortIconColorClass}`}
 										>
 											<span
 												className={`transition-opacity duration-150 ${
