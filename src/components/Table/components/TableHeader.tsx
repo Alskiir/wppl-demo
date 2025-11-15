@@ -44,12 +44,14 @@ const TableHeader = <T,>({
 						const headerJustifyClass =
 							headerJustifyClassMap[alignment];
 
+						const hoverHighlightClasses = canSort
+							? "transition-colors duration-150 hover:bg-(--surface-hover) focus-within:bg-(--surface-hover)"
+							: "";
+
 						return (
 							<th
 								key={column.id}
-								className={`p-0 ${
-									alignmentClassMap[alignment]
-								} ${column.headerClassName ?? ""}`}
+								className={`p-0 ${alignmentClassMap[alignment]} ${column.headerClassName ?? ""} ${hoverHighlightClasses}`}
 								scope="col"
 								aria-sort={
 									canSort
@@ -65,7 +67,7 @@ const TableHeader = <T,>({
 									<button
 										type="button"
 										onClick={() => onSort(column.id)}
-										className={`group relative flex h-full w-full items-center ${headerPaddingClasses} font-semibold text-(--text-primary) transition-colors duration-150 hover:bg-(--surface-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
+										className={`group relative flex h-full w-full items-center ${headerPaddingClasses} bg-transparent font-semibold text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
 										aria-pressed={Boolean(isActive)}
 										style={headerMinHeightStyle}
 									>
