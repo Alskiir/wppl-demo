@@ -40,7 +40,7 @@ const LineDetailCard = ({
 		<div className="mt-3 grid gap-3 md:grid-cols-2">
 			<div className="rounded-lg border border-(--border-subtle) bg-(--surface-panel) p-3">
 				<Text as="span" variant="strong" size="xs">
-					Home Pair
+					{homeLabel}
 				</Text>
 				<Text as="p" variant="muted" size="sm">
 					{formatPlayerNames(line.homePlayers)}
@@ -48,7 +48,7 @@ const LineDetailCard = ({
 			</div>
 			<div className="rounded-lg border border-(--border-subtle) bg-(--surface-panel) p-3">
 				<Text as="span" variant="strong" size="xs">
-					Away Pair
+					{awayLabel}
 				</Text>
 				<Text as="p" variant="muted" size="sm">
 					{formatPlayerNames(line.awayPlayers)}

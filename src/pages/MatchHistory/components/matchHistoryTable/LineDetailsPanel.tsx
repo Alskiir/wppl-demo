@@ -35,6 +35,7 @@ const LineDetailsPanel = ({
 }: LineDetailsPanelProps) => {
 	const homeLabel = match.isHomeMatch ? teamName : match.opponentName;
 	const awayLabel = match.isHomeMatch ? match.opponentName : teamName;
+	const locationLabel = match.location?.trim() || "Location TBD";
 
 	return (
 		<div className="rounded-xl border border-(--border-default) bg-(--surface-panel) p-4 shadow-sm">
@@ -55,6 +56,32 @@ const LineDetailsPanel = ({
 				>
 					Hide details
 				</button>
+			</div>
+			<div className="mt-3 flex flex-wrap gap-x-8 gap-y-3">
+				{[
+					{ label: "Location", value: locationLabel },
+					{ label: "Home Team", value: homeLabel },
+					{ label: "Away Team", value: awayLabel },
+				].map(({ label, value }) => (
+					<div key={label}>
+						<Text
+							as="span"
+							variant="subtle"
+							size="xs"
+							className="block uppercase tracking-[0.2em]"
+						>
+							{label}
+						</Text>
+						<Text
+							as="span"
+							variant="strong"
+							size="sm"
+							className="block"
+						>
+							{value}
+						</Text>
+					</div>
+				))}
 			</div>
 			{match.lines.length ? (
 				<div className="mt-4 grid gap-4 md:grid-cols-2">
