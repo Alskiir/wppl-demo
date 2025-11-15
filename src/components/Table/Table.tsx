@@ -26,6 +26,8 @@ const Table = <T,>({
 	isLoading = false,
 	skeletonRowCount = 5,
 	emptyMessage = defaultEmptyMessage,
+	toolbar,
+	toolbarClassName,
 	pageSize,
 	initialSortColumnId,
 	initialSortDirection = "asc",
@@ -84,9 +86,18 @@ const Table = <T,>({
 	const resolvedClassName = ["md-card overflow-hidden", className]
 		.filter(Boolean)
 		.join(" ");
+	const resolvedToolbarClassName = [
+		"border-b border-(--border-subtle) bg-(--surface-panel) px-4 py-4",
+		toolbarClassName,
+	]
+		.filter(Boolean)
+		.join(" ");
 
 	return (
 		<div className={resolvedClassName}>
+			{toolbar ? (
+				<div className={resolvedToolbarClassName}>{toolbar}</div>
+			) : null}
 			<div className="overflow-x-auto">
 				<table className="min-w-full table-auto text-sm text-(--text-primary)">
 					<TableHeader

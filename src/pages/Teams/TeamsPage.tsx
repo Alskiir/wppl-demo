@@ -19,18 +19,19 @@ function TeamsPage() {
 	const hasTeams = teams.length > 0;
 	const showRoster =
 		!isLoading && !error && selectedTeamId && teamDetails !== null;
-
 	return (
 		<PageShell
 			title="Teams"
 			description="Select a roster to explore team members and details."
 			actions={
-				<TeamFilter
-					value={selectedTeamId}
-					onChange={(nextValue) => setSelectedTeamId(nextValue)}
-					options={teamOptions}
-					disabled={isLoadingTeams || !hasTeams}
-				/>
+				<>
+					<TeamFilter
+						value={selectedTeamId}
+						onChange={(nextValue) => setSelectedTeamId(nextValue)}
+						options={teamOptions}
+						disabled={isLoadingTeams || !hasTeams}
+					/>
+				</>
 			}
 		>
 			{error ? (
@@ -47,7 +48,10 @@ function TeamsPage() {
 						team={teamDetails}
 						rosterCount={rosterCount}
 					/>
-					<TeamRosterTable roster={roster} />
+					<TeamRosterTable
+						roster={roster}
+						teamName={teamDetails?.name}
+					/>
 				</div>
 			) : (
 				<GlassCard description="Choose a team to view roster details." />

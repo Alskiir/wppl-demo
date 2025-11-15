@@ -24,6 +24,8 @@ type BaseTableProps = {
 	isLoading?: boolean;
 	skeletonRowCount?: number;
 	emptyMessage?: React.ReactNode;
+	toolbar?: React.ReactNode;
+	toolbarClassName?: string;
 	pageSize?: number;
 	initialSortColumnId?: string;
 	initialSortDirection?: SortDirection;
