@@ -376,6 +376,53 @@ input[type="number"]::-webkit-outer-spin-button {
 	background-size: 0.85rem;
 }
 
+.copy-button {
+	position: relative;
+	transition: background-color 150ms ease, border-color 150ms ease,
+		color 150ms ease;
+}
+
+.copy-button:hover {
+	background-color: color-mix(
+		in srgb,
+		var(--md-sys-color-primary) 12%,
+		transparent
+	);
+	border-color: color-mix(
+		in srgb,
+		var(--md-sys-color-primary) 70%,
+		var(--md-sys-color-outline) 30%
+	);
+}
+
+.copy-button--success {
+	border-color: color-mix(in srgb, var(--success) 75%, transparent);
+	color: var(--success);
+}
+
+.copy-button__toast {
+	position: absolute;
+	top: 50%;
+	left: calc(100% + 0.5rem);
+	transform: translate(0, -50%) scale(0.95);
+	padding: 0.1rem 0.5rem;
+	border-radius: 9999px;
+	background-color: color-mix(in srgb, var(--success) 15%, transparent);
+	color: var(--success);
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.copy-button__toast--visible {
+	opacity: 1;
+	transform: translate(0, -50%) scale(1);
+}
+
 .md-button--compact {
 	padding: 0.45rem 1rem;
 	font-size: 0.8rem;

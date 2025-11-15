@@ -166,15 +166,23 @@ const ContactCell = ({
 				<button
 					type="button"
 					onClick={() => onCopy(resolvedValue)}
-					className={`inline-flex items-center gap-1 rounded-full border border-(--border-subtle) px-3 py-1 text-xs font-semibold transition-colors hover:bg-(--surface-hover) ${
-						isCopied ? "bg-(--surface-hover) text-(--accent)" : ""
+					className={`copy-button inline-flex items-center gap-1 rounded-full border border-(--border-subtle) px-3 py-1 text-xs font-semibold transition-colors ${
+						isCopied ? "copy-button--success" : ""
 					}`}
 				>
 					<CopyIcon className={iconClass} aria-hidden="true" />
 					<span>Copy</span>
-					{isCopied ? (
-						<span className="text-(--success)">✓</span>
-					) : null}
+					<span
+						className={`copy-button__toast ${
+							isCopied ? "copy-button__toast--visible" : ""
+						}`}
+						aria-hidden="true"
+					>
+						Copied!
+					</span>
+					<span className="sr-only" aria-live="polite">
+						{isCopied ? "Copied to clipboard" : "Copy address"}
+					</span>
 				</button>
 			</div>
 		</div>
