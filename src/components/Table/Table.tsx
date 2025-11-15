@@ -69,11 +69,7 @@ const headerJustifyClassMap: Record<ColumnAlignment, string> = {
 	center: "justify-center text-center",
 	right: "justify-end text-right",
 };
-const sortableButtonPaddingMap: Record<ColumnAlignment, string> = {
-	left: "pl-2 pr-8",
-	center: "px-8",
-	right: "pl-8 pr-2",
-};
+const headerPaddingClasses = "px-6 py-4";
 const emptyColumns: TableColumn<never>[] = [];
 
 const renderHeaderContent = (
@@ -311,7 +307,7 @@ const Table = <T,>({
 										return (
 											<th
 												key={column.id}
-												className={`px-6 py-4 ${
+												className={`p-0 ${
 													alignmentClassMap[alignment]
 												} ${
 													column.headerClassName ?? ""
@@ -336,7 +332,7 @@ const Table = <T,>({
 																column.id
 															)
 														}
-														className={`group relative flex w-full items-center py-1 font-semibold text-(--text-primary) transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${sortableButtonPaddingMap[alignment]}`}
+														className={`group relative flex w-full items-center ${headerPaddingClasses} font-semibold text-(--text-primary) transition-colors duration-150 hover:bg-(--surface-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
 														aria-pressed={Boolean(
 															isActive
 														)}
@@ -348,7 +344,7 @@ const Table = <T,>({
 														</span>
 														<span
 															aria-hidden="true"
-															className="pointer-events-none absolute right-1 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[0.8rem] text-(--text-muted)"
+															className="pointer-events-none absolute right-4 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[0.8rem] text-(--text-muted)"
 														>
 															<span
 																className={`transition-opacity duration-150 ${
@@ -366,7 +362,7 @@ const Table = <T,>({
 													</button>
 												) : (
 													<span
-														className={`flex w-full items-center ${headerJustifyClass}`}
+														className={`flex w-full items-center ${headerJustifyClass} ${headerPaddingClasses}`}
 													>
 														{headerContent}
 													</span>
