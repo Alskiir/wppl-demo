@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "../../../components";
 import {
 	BASE_TABLE_WEIGHT,
@@ -44,6 +44,57 @@ type LinesTableProps = {
 	onWinnerChange: (lineId: string, value: string) => void;
 };
 
+const useMeasuredContainerWidth = () => {
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const [width, setWidth] = useState(0);
+
+	const commitWidth = useCallback((nextWidth: number) => {
+		setWidth((prev) => (Math.abs(prev - nextWidth) > 1 ? nextWidth : prev));
+	}, []);
+
+	const updateWidth = useCallback(() => {
+		const node = scrollContainerRef.current;
+		if (!node) {
+			return;
+		}
+
+		const nextWidth = node.getBoundingClientRect().width;
+		commitWidth(nextWidth);
+	}, [commitWidth]);
+
+	useEffect(() => {
+		const node = scrollContainerRef.current;
+		if (!node) {
+			return;
+		}
+
+		updateWidth();
+
+		if (typeof window === "undefined") {
+			return;
+		}
+
+		if (typeof ResizeObserver === "undefined") {
+			window.addEventListener("resize", updateWidth);
+			return () => window.removeEventListener("resize", updateWidth);
+		}
+
+		const observer = new ResizeObserver((entries) => {
+			if (!entries.length) {
+				return;
+			}
+			const entryWidth = entries[0].contentRect.width;
+			commitWidth(entryWidth);
+		});
+
+		observer.observe(node);
+
+		return () => observer.disconnect();
+	}, [commitWidth, updateWidth]);
+
+	return { ref: scrollContainerRef, width };
+};
+
 const LinesTable = ({
 	lines,
 	maxGames,
@@ -61,50 +112,15 @@ const LinesTable = ({
 	onGameScoreChange,
 	onWinnerChange,
 }: LinesTableProps) => {
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
-	const [containerWidth, setContainerWidth] = useState(0);
-
-	useEffect(() => {
-		const node = scrollContainerRef.current;
-		if (!node) {
-			return;
-		}
-
-		const updateWidth = () => {
-			const nextWidth = node.getBoundingClientRect().width;
-			setContainerWidth((prev) =>
-				Math.abs(prev - nextWidth) > 1 ? nextWidth : prev
-			);
-		};
-
-		updateWidth();
-
-		if (typeof window === "undefined") {
-			return;
-		}
-
-		if (typeof ResizeObserver === "undefined") {
-			window.addEventListener("resize", updateWidth);
-			return () => window.removeEventListener("resize", updateWidth);
-		}
-
-		const observer = new ResizeObserver((entries) => {
-			if (!entries.length) {
-				return;
-			}
-			const entry = entries[0];
-			setContainerWidth(entry.contentRect.width);
-		});
-
-		observer.observe(node);
-
-		return () => observer.disconnect();
-	}, []);
-
-	const unitWidth =
-		containerWidth > 0
-			? containerWidth / BASE_TABLE_WEIGHT
-			: FALLBACK_UNIT_WIDTH;
+	const { ref: scrollContainerRef, width: containerWidth } =
+		useMeasuredContainerWidth();
+	const unitWidth = useMemo(
+		() =>
+			containerWidth > 0
+				? containerWidth / BASE_TABLE_WEIGHT
+				: FALLBACK_UNIT_WIDTH,
+		[containerWidth]
+	);
 
 	const columnWidths: LineRowColumnWidths = useMemo(
 		() => ({
@@ -116,8 +132,12 @@ const LinesTable = ({
 		[unitWidth]
 	);
 
-	const totalWeight = STATIC_COLUMN_WEIGHT + maxGames * GAME_COLUMN_WEIGHT;
-	const tableWidth = Math.max(containerWidth, totalWeight * unitWidth || 0);
+	const tableWidth = useMemo(() => {
+		const totalWeight =
+			STATIC_COLUMN_WEIGHT + maxGames * GAME_COLUMN_WEIGHT;
+		const weightedWidth = totalWeight * unitWidth;
+		return Math.max(containerWidth, weightedWidth || 0);
+	}, [containerWidth, maxGames, unitWidth]);
 
 	return (
 		<section className="md-card overflow-hidden p-0">

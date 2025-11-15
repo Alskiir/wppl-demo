@@ -1,3 +1,4 @@
+import { memo, useCallback } from "react";
 import {
 	COLUMN_WIDTH_CLASS,
 	GAME_COLUMN_WIDTH_CLASS,
@@ -43,7 +44,88 @@ type LineRowProps = {
 	columnWidths: LineRowColumnWidths;
 };
 
-const LineRow = ({
+type TeamPlayersColumnProps = {
+	label: string;
+	side: "teamA" | "teamH";
+	players: PlayerOption[];
+	disabled: boolean;
+	selections: LineFormState["teamA"];
+	columnWidth: number;
+	lineId: string;
+	onPlayerChange: LineRowProps["onPlayerChange"];
+};
+
+const TeamPlayersColumn = memo(
+	({
+		label,
+		side,
+		players,
+		disabled,
+		selections,
+		columnWidth,
+		lineId,
+		onPlayerChange,
+	}: TeamPlayersColumnProps) => {
+		const handlePlayerChange = useCallback(
+			(slot: "player1Id" | "player2Id", value: string) => {
+				onPlayerChange(lineId, side, slot, value);
+			},
+			[lineId, onPlayerChange, side]
+		);
+
+		return (
+			<td
+				className={`${COLUMN_WIDTH_CLASS} align-top`}
+				style={getColumnStyle(columnWidth)}
+			>
+				<div className="flex flex-col gap-3">
+					<span className="md-field-label">{label}</span>
+					<div className="space-y-3">
+						<div className="space-y-1 text-xs">
+							<span className="md-field-label text-[0.7rem]">
+								Player 1
+							</span>
+							<PlayerSelect
+								value={selections.player1Id}
+								options={players}
+								placeholder="Player 1"
+								disabled={disabled}
+								onChange={(value) =>
+									handlePlayerChange("player1Id", value)
+								}
+							/>
+						</div>
+						<div className="space-y-1 text-xs">
+							<span className="md-field-label text-[0.7rem]">
+								Player 2
+							</span>
+							<PlayerSelect
+								value={selections.player2Id}
+								options={players}
+								placeholder="Player 2"
+								disabled={disabled}
+								onChange={(value) =>
+									handlePlayerChange("player2Id", value)
+								}
+							/>
+						</div>
+					</div>
+				</div>
+			</td>
+		);
+	},
+	(prev, next) =>
+		prev.label === next.label &&
+		prev.side === next.side &&
+		prev.disabled === next.disabled &&
+		prev.players === next.players &&
+		prev.selections === next.selections &&
+		prev.columnWidth === next.columnWidth &&
+		prev.lineId === next.lineId &&
+		prev.onPlayerChange === next.onPlayerChange
+);
+
+const LineRowComponent = ({
 	line,
 	maxGames,
 	homeTeamId,
@@ -59,63 +141,6 @@ const LineRow = ({
 	onRemoveGame,
 	columnWidths,
 }: LineRowProps) => {
-	const renderTeamPlayers = (
-		side: "teamA" | "teamH",
-		label: string,
-		players: PlayerOption[],
-		disabled: boolean,
-		selections: LineFormState["teamA"]
-	) => (
-		<td
-			className={`${COLUMN_WIDTH_CLASS} align-top`}
-			style={getColumnStyle(columnWidths.player)}
-		>
-			<div className="flex flex-col gap-3">
-				<span className="md-field-label">{label}</span>
-				<div className="space-y-3">
-					<div className="space-y-1 text-xs">
-						<span className="md-field-label text-[0.7rem]">
-							Player 1
-						</span>
-						<PlayerSelect
-							value={selections.player1Id}
-							options={players}
-							placeholder="Player 1"
-							disabled={disabled}
-							onChange={(value) =>
-								onPlayerChange(
-									line.id,
-									side,
-									"player1Id",
-									value
-								)
-							}
-						/>
-					</div>
-					<div className="space-y-1 text-xs">
-						<span className="md-field-label text-[0.7rem]">
-							Player 2
-						</span>
-						<PlayerSelect
-							value={selections.player2Id}
-							options={players}
-							placeholder="Player 2"
-							disabled={disabled}
-							onChange={(value) =>
-								onPlayerChange(
-									line.id,
-									side,
-									"player2Id",
-									value
-								)
-							}
-						/>
-					</div>
-				</div>
-			</div>
-		</td>
-	);
-
 	return (
 		<tr className="text-sm text-(--text-secondary) border-b border-(--border-subtle) bg-(--surface-card) transition-colors duration-200 hover:bg-(--surface-hover)">
 			<td
@@ -145,20 +170,26 @@ const LineRow = ({
 					</div>
 				</div>
 			</td>
-			{renderTeamPlayers(
-				"teamA",
-				"Team A",
-				awayPlayers,
-				!awayTeamId,
-				line.teamA
-			)}
-			{renderTeamPlayers(
-				"teamH",
-				"Team H",
-				homePlayers,
-				!homeTeamId,
-				line.teamH
-			)}
+			<TeamPlayersColumn
+				side="teamA"
+				label="Team A"
+				players={awayPlayers}
+				disabled={!awayTeamId}
+				selections={line.teamA}
+				columnWidth={columnWidths.player}
+				lineId={line.id}
+				onPlayerChange={onPlayerChange}
+			/>
+			<TeamPlayersColumn
+				side="teamH"
+				label="Team H"
+				players={homePlayers}
+				disabled={!homeTeamId}
+				selections={line.teamH}
+				columnWidth={columnWidths.player}
+				lineId={line.id}
+				onPlayerChange={onPlayerChange}
+			/>
 			{Array.from({ length: maxGames }, (_, idx) => {
 				const game = line.games[idx];
 				if (game) {
@@ -227,4 +258,20 @@ const LineRow = ({
 	);
 };
 
-export default LineRow;
+const areLineRowPropsEqual = (prev: LineRowProps, next: LineRowProps) =>
+	prev.line === next.line &&
+	prev.maxGames === next.maxGames &&
+	prev.homeTeamId === next.homeTeamId &&
+	prev.awayTeamId === next.awayTeamId &&
+	prev.homeTeam === next.homeTeam &&
+	prev.awayTeam === next.awayTeam &&
+	prev.homePlayers === next.homePlayers &&
+	prev.awayPlayers === next.awayPlayers &&
+	prev.onPlayerChange === next.onPlayerChange &&
+	prev.onGameScoreChange === next.onGameScoreChange &&
+	prev.onWinnerChange === next.onWinnerChange &&
+	prev.onAddGame === next.onAddGame &&
+	prev.onRemoveGame === next.onRemoveGame &&
+	prev.columnWidths === next.columnWidths;
+
+export default memo(LineRowComponent, areLineRowPropsEqual);

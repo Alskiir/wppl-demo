@@ -1,4 +1,6 @@
+import { memo, useCallback, useMemo } from "react";
 import { GAME_COLUMN_WIDTH_CLASS } from "../constants";
+import { getColumnStyle } from "./columnSizing";
 import type { GameScore } from "../types";
 
 type GameColumnProps = {
@@ -14,7 +16,7 @@ type GameColumnProps = {
 	columnWidth: number;
 };
 
-const GameColumn = ({
+const GameColumnComponent = ({
 	lineId,
 	gameIndex,
 	game,
@@ -23,12 +25,27 @@ const GameColumn = ({
 }: GameColumnProps) => {
 	const inputClass = "md-input md-input--compact pr-12";
 
-	const handleStep = (field: "home" | "away", delta: 1 | -1) => {
-		const currentValue = Number(game[field] || 0);
-		const safeValue = Number.isNaN(currentValue) ? 0 : currentValue;
-		const nextValue = Math.max(0, safeValue + delta);
-		onScoreChange(lineId, gameIndex, field, String(nextValue));
-	};
+	const columnStyle = useMemo(
+		() => getColumnStyle(columnWidth),
+		[columnWidth]
+	);
+
+	const handleScoreChange = useCallback(
+		(field: "home" | "away", value: string) => {
+			onScoreChange(lineId, gameIndex, field, value);
+		},
+		[gameIndex, lineId, onScoreChange]
+	);
+
+	const handleStep = useCallback(
+		(field: "home" | "away", delta: 1 | -1) => {
+			const currentValue = Number(game[field] || 0);
+			const safeValue = Number.isNaN(currentValue) ? 0 : currentValue;
+			const nextValue = Math.max(0, safeValue + delta);
+			handleScoreChange(field, String(nextValue));
+		},
+		[game, handleScoreChange]
+	);
 
 	const renderScoreInput = (
 		label: string,
@@ -45,12 +62,7 @@ const GameColumn = ({
 					inputMode="numeric"
 					value={value}
 					onChange={(event) =>
-						onScoreChange(
-							lineId,
-							gameIndex,
-							field,
-							event.target.value
-						)
+						handleScoreChange(field, event.target.value)
 					}
 					className={inputClass}
 				/>
@@ -103,10 +115,7 @@ const GameColumn = ({
 	return (
 		<td
 			className={`${GAME_COLUMN_WIDTH_CLASS} align-top`}
-			style={{
-				width: `${columnWidth}px`,
-				minWidth: `${columnWidth}px`,
-			}}
+			style={columnStyle}
 		>
 			<div className="flex flex-col gap-3">
 				<label className="text-[11px] uppercase tracking-wide text-(--text-muted)">
@@ -121,4 +130,14 @@ const GameColumn = ({
 	);
 };
 
-export default GameColumn;
+const areGameColumnPropsEqual = (
+	prev: GameColumnProps,
+	next: GameColumnProps
+) =>
+	prev.lineId === next.lineId &&
+	prev.gameIndex === next.gameIndex &&
+	prev.game === next.game &&
+	prev.columnWidth === next.columnWidth &&
+	prev.onScoreChange === next.onScoreChange;
+
+export default memo(GameColumnComponent, areGameColumnPropsEqual);
