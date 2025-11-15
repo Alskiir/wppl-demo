@@ -8,6 +8,7 @@ export type SortDirection = "asc" | "desc";
 export type TableColumn<T> = {
 	id: string;
 	header: React.ReactNode;
+	headerHint?: string;
 	accessor: (row: T, rowIndex: number) => React.ReactNode;
 	sortFn?: (a: T, b: T) => number;
 	align?: "left" | "center" | "right";
@@ -77,14 +78,21 @@ const emptyColumns: TableColumn<never>[] = [];
 
 const renderHeaderContent = (
 	content: React.ReactNode,
-	alignment: ColumnAlignment
+	alignment: ColumnAlignment,
+	hint?: string
 ) => {
 	if (content === null || typeof content === "undefined") {
 		return null;
 	}
 
 	if (typeof content === "string" || typeof content === "number") {
-		return <HeaderLabel label={String(content)} align={alignment} />;
+		return (
+			<HeaderLabel
+				label={String(content)}
+				align={alignment}
+				hint={hint}
+			/>
+		);
 	}
 
 	return content;
@@ -294,7 +302,8 @@ const Table = <T,>({
 										const headerContent =
 											renderHeaderContent(
 												column.header,
-												alignment
+												alignment,
+												column.headerHint
 											);
 										const headerJustifyClass =
 											headerJustifyClassMap[alignment];
@@ -327,7 +336,7 @@ const Table = <T,>({
 																column.id
 															)
 														}
-														className={`group relative flex w-full items-center py-1 font-semibold text-(--text-primary) transition-colors duration-150 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${sortableButtonPaddingMap[alignment]}`}
+														className={`group relative flex w-full items-center py-1 font-semibold text-(--text-primary) transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) ${sortableButtonPaddingMap[alignment]}`}
 														aria-pressed={Boolean(
 															isActive
 														)}

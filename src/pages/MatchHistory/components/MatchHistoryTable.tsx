@@ -1,10 +1,5 @@
 import { useMemo } from "react";
-import {
-	HeaderLabel,
-	Table,
-	Text,
-	type TableColumn,
-} from "../../../components";
+import { Table, Text, type TableColumn } from "../../../components";
 import type { MatchHistoryEntry, MatchResult } from "../types";
 
 type MatchHistoryTableProps = {
@@ -136,7 +131,7 @@ const buildColumns = (
 ): TableColumn<MatchHistoryEntry>[] => [
 	{
 		id: "date",
-		header: <HeaderLabel label="Date" />,
+		header: "Date",
 		align: "center",
 		sortFn: (a, b) => getMatchTimestamp(a) - getMatchTimestamp(b),
 		accessor: (row) => {
@@ -159,20 +154,21 @@ const buildColumns = (
 	},
 	{
 		id: "opponent",
-		header: <HeaderLabel label="Opponent" />,
+		header: "Opponent",
 		align: "center",
 		sortFn: (a, b) => compareText(a.opponentName, b.opponentName),
 		accessor: (row) => buildOpponentCell(row),
 	},
 	{
 		id: "venue",
-		header: <HeaderLabel label="Venue" />,
+		header: "Venue",
 		align: "center",
 		accessor: (row) => buildVenueCell(row),
 	},
 	{
 		id: "lines",
-		header: <HeaderLabel label="Lines" hint="(Win / Loss)" />,
+		header: "Lines",
+		headerHint: "(Win / Loss)",
 		align: "center",
 		accessor: (row) => (
 			<div className="flex flex-col gap-1">
@@ -197,7 +193,8 @@ const buildColumns = (
 	},
 	{
 		id: "games",
-		header: <HeaderLabel label="Games" hint="(Win / Loss)" />,
+		header: "Games",
+		headerHint: "(Win / Loss)",
 		align: "center",
 		accessor: (row) => (
 			<div className="flex flex-col items-center gap-1">
@@ -217,7 +214,7 @@ const buildColumns = (
 	},
 	{
 		id: "points",
-		header: <HeaderLabel label="Points Earned" />,
+		header: "Points Earned",
 		align: "center",
 		accessor: (row) => (
 			<div className="flex flex-col items-center gap-1">
