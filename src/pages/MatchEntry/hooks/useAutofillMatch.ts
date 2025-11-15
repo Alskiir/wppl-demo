@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { Dispatch, MutableRefObject, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import { MIN_GAMES_PER_LINE } from "../constants";
 import { determineWinner, renumberLines, todayIso } from "../lineUtils";
 import type {
@@ -24,7 +24,7 @@ type UseAutofillMatchOptions = {
 	setToast: Dispatch<SetStateAction<ToastState>>;
 	setValidationErrors: Dispatch<SetStateAction<string[]>>;
 	getRosterForTeam: (teamId: string) => Promise<PlayerOption[]>;
-	rosterCacheRef: MutableRefObject<Map<string, PlayerOption[]>>;
+	rosterCacheRef: RefObject<Map<string, PlayerOption[]>>;
 };
 
 const pickPlayersForLine = (
