@@ -556,27 +556,31 @@ input[type="number"]::-webkit-outer-spin-button {
 	background-color: color-mix(in srgb, var(--danger) 18%, transparent);
 }
 
-.table-header-button {
+.table-header-cell {
 	background-color: transparent;
 	color: var(--text-primary);
 	transition: background-color 150ms ease, color 150ms ease;
 }
 
-.table-header-button:hover,
-.table-header-button:focus-visible {
+.table-header-cell--sortable:not(.table-header-cell--active):hover {
 	background-color: var(--surface-hover);
 }
 
-.table-header-button--active {
+.table-header-cell--active {
 	background-color: var(--md-sys-color-primary-container);
 	color: var(--md-sys-color-on-primary-container);
 }
 
-.table-header-button--active:hover,
-.table-header-button--active:focus-visible {
+.table-header-cell--active:hover {
 	background-color: color-mix(
 		in srgb,
 		var(--md-sys-color-primary-container) 90%,
 		white 10%
 	);
+}
+
+.table-header-button {
+	background-color: transparent;
+	color: inherit;
+	transition: color 150ms ease;
 }

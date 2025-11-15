@@ -44,15 +44,14 @@ const TableHeader = <T,>({
 						const headerJustifyClass =
 							headerJustifyClassMap[alignment];
 
-						const hoverHighlightClasses = canSort
-							? "transition-colors duration-150 hover:bg-(--surface-hover) focus-within:bg-(--surface-hover)"
-							: "";
-						const buttonStateClasses = [
-							"table-header-button",
-							isActive ? "table-header-button--active" : "",
+						const headerStateClasses = [
+							"table-header-cell",
+							canSort ? "table-header-cell--sortable" : "",
+							isActive ? "table-header-cell--active" : "",
 						]
 							.filter(Boolean)
 							.join(" ");
+						const buttonStateClasses = "table-header-button";
 						const sortIconColorClass = isActive
 							? "text-(--md-sys-color-on-primary-container)"
 							: "text-(--text-muted)";
@@ -60,11 +59,9 @@ const TableHeader = <T,>({
 						return (
 							<th
 								key={column.id}
-								className={`p-0 ${
+								className={`p-0 ${headerStateClasses} ${
 									alignmentClassMap[alignment]
-								} ${
-									column.headerClassName ?? ""
-								} ${hoverHighlightClasses}`}
+								} ${column.headerClassName ?? ""}`}
 								scope="col"
 								aria-sort={
 									canSort
