@@ -28,6 +28,7 @@ export type MatchLineDetail = {
 
 export type MatchHistoryEntry = {
 	id: string;
+	teamId: string;
 	matchDate: string;
 	matchTime: string | null;
 	location: string | null;
