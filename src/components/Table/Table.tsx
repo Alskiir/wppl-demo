@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Text } from "../Typography";
-import HeaderLabel from "./HeaderLabel";
+import HeaderLabel, { type HeaderLabelProps } from "./HeaderLabel";
 
 export type TableRow = Array<React.ReactNode>;
 export type SortDirection = "asc" | "desc";
@@ -72,6 +72,20 @@ const headerJustifyClassMap: Record<ColumnAlignment, string> = {
 const headerPaddingClasses = "px-6 py-4";
 const emptyColumns: TableColumn<never>[] = [];
 
+const hasHeaderHintValue = (value?: string) =>
+	typeof value === "string" && value.trim().length > 0;
+
+const isHeaderLabelElement = (
+	node: React.ReactNode
+): node is React.ReactElement<HeaderLabelProps> =>
+	React.isValidElement(node) && node.type === HeaderLabel;
+
+const headerNodeHasHint = (node: React.ReactNode) =>
+	isHeaderLabelElement(node) && hasHeaderHintValue(node.props.hint);
+
+const columnHasHint = <T,>(column: TableColumn<T>) =>
+	hasHeaderHintValue(column.headerHint) || headerNodeHasHint(column.header);
+
 const renderHeaderContent = (
 	content: React.ReactNode,
 	alignment: ColumnAlignment,
@@ -116,6 +130,9 @@ const Table = <T,>({
 	const columnCount = hasColumnDefinitions
 		? resolvedColumns.length
 		: headers?.length ?? 0;
+	const hasAnyHeaderHints = hasColumnDefinitions
+		? resolvedColumns.some((column) => columnHasHint(column))
+		: (headers ?? []).some((header) => headerNodeHasHint(header));
 	const normalizedPageSize =
 		typeof pageSize === "number" && pageSize > 0
 			? Math.max(1, Math.floor(pageSize))
@@ -267,6 +284,9 @@ const Table = <T,>({
 	const resolvedClassName = ["md-card overflow-hidden", className]
 		.filter(Boolean)
 		.join(" ");
+	const headerMinHeightStyle = hasAnyHeaderHints
+		? { minHeight: "65px" }
+		: undefined;
 	const showPagination =
 		normalizedPageSize !== undefined &&
 		sortedData.length > normalizedPageSize;
@@ -332,10 +352,13 @@ const Table = <T,>({
 																column.id
 															)
 														}
-														className={`group relative flex w-full items-center ${headerPaddingClasses} font-semibold text-(--text-primary) transition-colors duration-150 hover:bg-(--surface-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
+														className={`group relative flex h-full w-full items-center ${headerPaddingClasses} font-semibold text-(--text-primary) transition-colors duration-150 hover:bg-(--surface-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)`}
 														aria-pressed={Boolean(
 															isActive
 														)}
+														style={
+															headerMinHeightStyle
+														}
 													>
 														<span
 															className={`flex w-full items-center ${headerJustifyClass}`}
@@ -363,6 +386,9 @@ const Table = <T,>({
 												) : (
 													<span
 														className={`flex w-full items-center ${headerJustifyClass} ${headerPaddingClasses}`}
+														style={
+															headerMinHeightStyle
+														}
 													>
 														{headerContent}
 													</span>
@@ -381,6 +407,7 @@ const Table = <T,>({
 											>
 												<span
 													className={`flex w-full items-center ${headerJustifyClassMap[alignment]}`}
+													style={headerMinHeightStyle}
 												>
 													{renderHeaderContent(
 														header,
