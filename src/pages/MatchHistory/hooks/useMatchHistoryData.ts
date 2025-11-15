@@ -5,7 +5,12 @@ import type {
 	RawMatchLineRow,
 	RawLineGameRow,
 } from "../../../data/matchHistory";
-import type { MatchHistoryEntry, MatchResult, TeamOption } from "../types";
+import type {
+	MatchHistoryEntry,
+	MatchLineDetail,
+	MatchResult,
+	TeamOption,
+} from "../types";
 import type { TeamRecord } from "../../../types/league";
 import { takeFirstRelationValue } from "../../../utils/dataTransforms";
 
@@ -112,6 +117,59 @@ const countGamesWon = (
 	}, 0);
 };
 
+const determineLineResultForTeam = (
+	winnerTeamId: string | null,
+	teamId: string,
+	opponentId: string
+): MatchResult => {
+	if (!winnerTeamId) {
+		return "tie";
+	}
+
+	if (winnerTeamId === teamId) {
+		return "win";
+	}
+
+	if (winnerTeamId === opponentId) {
+		return "loss";
+	}
+
+	return "tie";
+};
+
+const buildLineDetails = (
+	lineRows: NormalizedMatchLineRow[],
+	teamId: string,
+	opponentId: string
+): MatchLineDetail[] =>
+	lineRows.map((line, index) => {
+		const normalizedWinnerId = line.winner_team_id
+			? String(line.winner_team_id)
+			: null;
+
+		const lineNumber =
+			typeof line.line_number === "number" &&
+			Number.isFinite(line.line_number)
+				? line.line_number
+				: index + 1;
+
+		return {
+			id: line.id,
+			lineNumber,
+			winnerTeamId: normalizedWinnerId,
+			result: determineLineResultForTeam(
+				normalizedWinnerId,
+				teamId,
+				opponentId
+			),
+			games: line.line_game.map((game, gameIndex) => ({
+				id: game.id ?? `${line.id}-${gameIndex}`,
+				homeScore: parseScore(game.home_score),
+				awayScore: parseScore(game.away_score),
+			})),
+		};
+	});
+
 const determineResult = (
 	declaredWinnerId: string | null,
 	teamScore: number,
@@ -153,6 +211,11 @@ const normalizeMatchHistoryRows = (
 			const opponent = isHomeMatch ? awayTeam : homeTeam;
 			const opponentId = String(opponent.id);
 			const lineRows = normalizeLineRows(row.match_line);
+			const lines = buildLineDetails(
+				lineRows,
+				normalizedTeamId,
+				opponentId
+			);
 
 			const teamScore = countLinesWon(lineRows, normalizedTeamId);
 			const opponentScore = countLinesWon(lineRows, opponentId);
@@ -195,6 +258,7 @@ const normalizeMatchHistoryRows = (
 				pointsEarned: gamesWon,
 				gamesWon,
 				gamesLost,
+				lines,
 			};
 		})
 		.filter((entry): entry is MatchHistoryEntry => Boolean(entry));
