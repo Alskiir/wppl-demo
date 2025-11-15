@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table, Text, type TableColumn } from "../../../components";
-import type { MatchHistoryEntry, MatchLineDetail, MatchResult } from "../types";
+import type {
+	MatchHistoryEntry,
+	MatchLineDetail,
+	MatchLinePlayer,
+	MatchResult,
+} from "../types";
 
 type MatchHistoryTableProps = {
 	rows: MatchHistoryEntry[];
@@ -105,6 +110,11 @@ type LineDetailCardProps = {
 	awayLabel: string;
 };
 
+const formatPlayerNames = (players: MatchLinePlayer[]) => {
+	const names = players.map((player) => player.fullName).filter(Boolean);
+	return names.length ? names.join(" & ") : "Players TBD";
+};
+
 const LineDetailCard = ({
 	line,
 	homeLabel,
@@ -121,6 +131,24 @@ const LineDetailCard = ({
 				</Text>
 			</div>
 			<ResultBadge result={line.result} />
+		</div>
+		<div className="mt-3 grid gap-3 md:grid-cols-2">
+			<div>
+				<Text as="span" variant="strong" size="xs">
+					{homeLabel} Pair
+				</Text>
+				<Text as="p" variant="body" size="sm">
+					{formatPlayerNames(line.homePlayers)}
+				</Text>
+			</div>
+			<div className="text-left">
+				<Text as="span" variant="strong" size="xs">
+					{awayLabel} Pair
+				</Text>
+				<Text as="p" variant="body" size="sm">
+					{formatPlayerNames(line.awayPlayers)}
+				</Text>
+			</div>
 		</div>
 		{line.games.length ? (
 			<div className="mt-3 flex flex-col gap-2">
@@ -141,6 +169,7 @@ const LineDetailCard = ({
 									{formatScoreValue(game.homeScore)}
 								</Text>
 							</div>
+							<div />
 							<div className="text-right">
 								<Text as="p" variant="strong" size="xs">
 									{awayLabel}
@@ -356,7 +385,7 @@ const buildColumns = (
 				className={[
 					"rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)",
 					expandedMatchId === row.id
-						? "border-(--accent) bg-(--accent) text-white hover:bg-(--accent-dark)"
+						? "border-(--accent-muted) bg-(--accent-muted) text-(--md-sys-color-on-primary-container) shadow-(--md-sys-elevation-1) hover:border-(--accent)"
 						: "border-(--border-subtle) text-(--accent) hover:border-(--accent) hover:bg-(--surface-hover)",
 				].join(" ")}
 				aria-pressed={expandedMatchId === row.id}

@@ -8,11 +8,15 @@ import type {
 import type {
 	MatchHistoryEntry,
 	MatchLineDetail,
+	MatchLinePlayer,
 	MatchResult,
 	TeamOption,
 } from "../types";
 import type { TeamRecord } from "../../../types/league";
-import { takeFirstRelationValue } from "../../../utils/dataTransforms";
+import {
+	formatFullName,
+	takeFirstRelationValue,
+} from "../../../utils/dataTransforms";
 
 type NormalizedMatchLineRow = Omit<RawMatchLineRow, "line_game"> & {
 	line_game: RawLineGameRow[];
@@ -117,6 +121,31 @@ const countGamesWon = (
 	}, 0);
 };
 
+type LinePlayerRelation = RawMatchLineRow["home_player1"];
+
+const normalizeLinePlayer = (
+	relation: LinePlayerRelation
+): MatchLinePlayer | null => {
+	const player = takeFirstRelationValue(relation);
+
+	if (!player || !player.id) {
+		return null;
+	}
+
+	return {
+		id: String(player.id),
+		fullName: formatFullName(player.first_name, player.last_name),
+	};
+};
+
+const buildPlayerPair = (
+	first: LinePlayerRelation,
+	second: LinePlayerRelation
+): MatchLinePlayer[] =>
+	[normalizeLinePlayer(first), normalizeLinePlayer(second)].filter(
+		(player): player is MatchLinePlayer => Boolean(player)
+	);
+
 const determineLineResultForTeam = (
 	winnerTeamId: string | null,
 	teamId: string,
@@ -146,6 +175,14 @@ const buildLineDetails = (
 		const normalizedWinnerId = line.winner_team_id
 			? String(line.winner_team_id)
 			: null;
+		const homePlayers = buildPlayerPair(
+			line.home_player1,
+			line.home_player2
+		);
+		const awayPlayers = buildPlayerPair(
+			line.away_player1,
+			line.away_player2
+		);
 
 		const lineNumber =
 			typeof line.line_number === "number" &&
@@ -162,6 +199,8 @@ const buildLineDetails = (
 				teamId,
 				opponentId
 			),
+			homePlayers,
+			awayPlayers,
 			games: line.line_game.map((game, gameIndex) => ({
 				id: game.id ?? `${line.id}-${gameIndex}`,
 				homeScore: parseScore(game.home_score),

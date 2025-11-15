@@ -5,6 +5,11 @@ export type TeamOption = TeamSelectOption;
 
 export type MatchResult = "win" | "loss" | "tie";
 
+export type MatchLinePlayer = {
+	id: string;
+	fullName: string;
+};
+
 export type MatchLineGame = {
 	id: string;
 	homeScore: number | null;
@@ -17,6 +22,8 @@ export type MatchLineDetail = {
 	winnerTeamId: string | null;
 	result: MatchResult;
 	games: MatchLineGame[];
+	homePlayers: MatchLinePlayer[];
+	awayPlayers: MatchLinePlayer[];
 };
 
 export type MatchHistoryEntry = {

@@ -1,6 +1,10 @@
 import { supabase } from "../lib/supabaseClient";
 import { resolveSupabase } from "../lib/supabaseQuery";
-import type { SupabaseRelation, TeamRecord } from "../types/league";
+import type {
+	PersonRecord,
+	SupabaseRelation,
+	TeamRecord,
+} from "../types/league";
 
 export type RawLineGameRow = {
 	id: string;
@@ -8,11 +12,19 @@ export type RawLineGameRow = {
 	away_score: number | null;
 };
 
+type LinePlayerRelation = SupabaseRelation<
+	Pick<PersonRecord, "id" | "first_name" | "last_name">
+>;
+
 export type RawMatchLineRow = {
 	id: string;
 	line_number: number | null;
 	winner_team_id: string | null;
 	line_game: SupabaseRelation<RawLineGameRow>;
+	home_player1: LinePlayerRelation;
+	home_player2: LinePlayerRelation;
+	away_player1: LinePlayerRelation;
+	away_player2: LinePlayerRelation;
 };
 
 export type RawMatchHistoryRow = {
@@ -42,6 +54,26 @@ const MATCH_HISTORY_SELECTION = `
 			id,
 			line_number,
 			winner_team_id,
+			home_player1:home_player1 (
+				id,
+				first_name,
+				last_name
+			),
+			home_player2:home_player2 (
+				id,
+				first_name,
+				last_name
+			),
+			away_player1:away_player1 (
+				id,
+				first_name,
+				last_name
+			),
+			away_player2:away_player2 (
+				id,
+				first_name,
+				last_name
+			),
 			line_game (
 				id,
 				home_score,
