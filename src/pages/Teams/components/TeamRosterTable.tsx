@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Table, Text, type TableColumn } from "../../../components";
+import { DEFAULT_TABLE_PAGE_SIZE } from "../../../constants/pagination";
 import type { TeamRosterEntry } from "../types";
 import {
 	buildFullName,
@@ -427,6 +428,7 @@ function TeamRosterTable({ roster, teamName }: TeamRosterTableProps) {
 		<Table
 			columns={columns}
 			data={filteredRoster}
+			pageSize={DEFAULT_TABLE_PAGE_SIZE}
 			getRowId={(row, index) => row.person.id ?? index}
 			initialSortColumnId="player"
 			initialSortDirection="asc"

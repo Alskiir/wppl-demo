@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table, Text } from "../../../components";
+import { DEFAULT_TABLE_PAGE_SIZE } from "../../../constants/pagination";
 import type { MatchHistoryEntry } from "../types";
 import LineDetailsPanel from "./matchHistoryTable/LineDetailsPanel";
 import { buildMatchHistoryColumns } from "./matchHistoryTable/columns";
@@ -51,6 +52,7 @@ function MatchHistoryTable({ rows, teamName }: MatchHistoryTableProps) {
 			<Table
 				columns={columns}
 				data={rows}
+				pageSize={DEFAULT_TABLE_PAGE_SIZE}
 				initialSortColumnId="date"
 				initialSortDirection="desc"
 				getRowId={(row) => row.id}

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Table, type TableColumn } from "../../../components";
+import { DEFAULT_TABLE_PAGE_SIZE } from "../../../constants/pagination";
 import type { StandingRecord } from "../hooks/useStandingsData";
 
 type StandingsTableProps = {
@@ -66,6 +67,7 @@ function StandingsTable({ standings }: StandingsTableProps) {
 		<Table
 			columns={columns}
 			data={standings}
+			pageSize={DEFAULT_TABLE_PAGE_SIZE}
 			initialSortColumnId="totalPoints"
 			initialSortDirection="desc"
 			getRowId={(row) => row.team_id ?? row.team_name}

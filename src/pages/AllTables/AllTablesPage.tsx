@@ -6,6 +6,7 @@ import {
 	Text,
 	type TableColumn,
 } from "../../components";
+import { DEFAULT_TABLE_PAGE_SIZE } from "../../constants/pagination";
 import {
 	formatTableCellValue,
 	formatTableColumnLabel,
@@ -20,7 +21,6 @@ import {
 const descriptorMap = new Map<DatabaseTableName, TableDescriptor>(
 	databaseTables.map((descriptor) => [descriptor.name, descriptor])
 );
-const DEFAULT_PAGE_SIZE = 25;
 type GenericRow = Record<string, unknown>;
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 const ROW_ID_CANDIDATES = [
@@ -322,7 +322,7 @@ function AllTablesPage() {
 					key={selectedTable ?? "all-tables"}
 					columns={columns}
 					data={visibleRows}
-					pageSize={DEFAULT_PAGE_SIZE}
+					pageSize={DEFAULT_TABLE_PAGE_SIZE}
 					isLoading={showTableSkeleton}
 					emptyMessage={tableEmptyMessage}
 					initialSortColumnId={defaultSortColumnId}
