@@ -1,4 +1,5 @@
 import { Text } from "../../../../components";
+import ResultBadge from "./ResultBadge";
 import type { MatchLineDetail } from "../../types";
 import { formatPlayerNames, formatScoreValue } from "./formatters";
 
@@ -21,13 +22,9 @@ const LineDetailCard = ({
 				<Text as="span" variant="strong" size="sm">
 					Line {line.lineNumber}
 				</Text>
-				<Text as="span" variant="subtle" size="xs">
-					{line.result === "win"
-						? "Won this line"
-						: line.result === "loss"
-						? "Lost this line"
-						: "Line tied"}
-				</Text>
+				<div className="mt-1">
+					<ResultBadge result={line.result} />
+				</div>
 			</div>
 			{line.winnerTeamId ? (
 				<Text
