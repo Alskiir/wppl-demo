@@ -1,78 +1,80 @@
 import { BaseCard, PageShell } from "../../components";
 
-const siteSections = [
+const pageSummaries = [
 	{
-		title: "Home & Navigation",
+		title: "Home",
 		description:
-			"Sticky header keeps quick links in view and welcomes visitors with a short overview so nobody gets lost on desktop or phone.",
+			"A short welcome with links to every part of the demo so people can move around without hunting for menus.",
 	},
 	{
 		title: "Standings",
 		description:
-			"Pulls the view team_standings into a ready-made table, sorts by total points, and surfaces helpful error cards if credentials fail.",
+			"Shows the league table sorted by points. If data is missing or slow to load, the page explains what to check next.",
 	},
 	{
 		title: "Teams",
 		description:
-			"Dropdown filter feeds the TeamDetailsCard and roster table, showing contact info, roles, and player counts straight from team_membership.",
+			"Pick a team to see a quick profile plus a roster table. The picker stays in place so you can jump between teams fast.",
+	},
+	{
+		title: "Match History",
+		description:
+			"Select any team to read every recorded match, including line scores and points earned for that meet.",
 	},
 	{
 		title: "Match Entry",
 		description:
-			"Guided form collects opponents, schedule, lines, games, and winners, mirroring the sheets captains fill out after each meet.",
+			"A guided form for captains to log opponents, dates, lineups, and game scores without needing a spreadsheet.",
 	},
 	{
 		title: "All Tables",
 		description:
-			"Lists every configured table (team, person, match, line_game, and more) so staff can browse raw rows without touching SQL.",
+			"Browse the raw data from the database (teams, people, matches, lines, and more) with a dropdown and sortable table.",
+	},
+	{
+		title: "About",
+		description:
+			"The page you are reading now: an overview of how the demo works and how it protects your time.",
 	},
 ];
 
 const matchEntryHighlights = [
-	"Roster dropdowns unlock only after a team is chosen, preventing away players from being mixed with home selections.",
-	"Line builder adds or removes pairings, re-numbers each row, and keeps at least one line ready so the sheet always has a starting point.",
-	"Game columns include plus and minus buttons beside each score, which helps tablet users update tallies without typing tiny numbers.",
-	"Every edit re-checks the score math so line winners and the overall match winner are confirmed before saving.",
-	"Autofill button grabs two teams and their players from the PostgreSQL database, seeds believable scores, and fills the location field for quick demos.",
-	"Submit button chains three inserts (match, match_line, line_game) and shows success or error banners right inside the form.",
+	"Team dropdowns only unlock the rosters for the team you picked, so home and away lineups do not get crossed.",
+	"A line builder lets you add or remove pairings while keeping the numbering tidy and always leaving at least one line in place.",
+	"Each game has plus and minus buttons next to the scores, making it easy to update on a phone or tablet.",
+	"The page checks the math after every change so line winners and the overall winner stay accurate before you submit.",
+	"Autofill can pull two sample teams from the database, set likely scores, and fill the location to speed up demos.",
+	"Submit saves the match, the lines, and each game in one go and shows a clear success or error banner on the spot.",
 ];
 
 const dataPractices = [
 	{
-		name: "React + TypeScript + Vite",
+		name: "Built for quick visits",
 		description:
-			"Typed hooks such as useMatchEntryForm and useTeamsPageData keep state predictable while Vite delivers fast refreshes during demos.",
+			"React, TypeScript, and Vite keep the experience snappy while typed hooks reduce surprises as the app grows.",
 	},
 	{
-		name: "Supabase-backed data",
+		name: "One data source",
 		description:
-			"The shared client in lib/supabaseClient pipes every request through resolveSupabase, so BaseCard banners can raise helpful errors and tables always get safe fallback data.",
+			"All reads and writes go through the Postgres database, with friendly error messages when something blocks a request.",
 	},
 	{
-		name: "Reusable layout system",
+		name: "Consistent layout",
 		description:
-			"Navbar, PageShell, BaseCard, and the shared Table component keep spacing, tone, and interactions consistent across phones, tablets, and laptops.",
+			"Shared pieces like the navbar, PageShell, BaseCard, and Table keep spacing, tone, and controls familiar on every page.",
 	},
 	{
-		name: "Utility helpers",
+		name: "Cleaned inputs",
 		description:
-			"dataTransforms.ts sanitizes names, IDs, and numbers before they hit dropdowns or rows, which keeps mock data and live data interchangeable.",
+			"Names, IDs, and numbers are trimmed and checked before they reach dropdowns or tables, keeping fake and real data aligned.",
 	},
 ];
 
-const capabilityHighlights = [
-	"Keeps league directors, captains, and volunteers on one responsive site instead of juggling spreadsheets.",
-	"Reads standings, rosters, and raw tables directly from the PostgreSQL database and writes structured match data back the moment a form is submitted.",
-	"Auto-builds tables and column orders based on whatever the database returns, so the All Tables view stays flexible.",
-	"Surfaces banner messaging whenever data fails to load, giving staff clear next steps without digging into developer tools.",
-	"Pairs modern styling with accessible controls (labels, focus states, inline help) so the experience works for non-technical staff.",
-];
-
-const roadmap = [
-	"Push every verified roster into a MailChimp audience so directors can fire off division-wide updates without exporting CSVs.",
-	"Trigger MailChimp automations whenever a match submission lands, sending recaps and reminders that reuse the Match Entry data.",
-	"Use the RegistrationWorks API to import registrations directly into PostgreSQL tables, guaranteeing that players, captains, and teams stay synchronized.",
-	"Run RegistrationWorks checks when captains pick players, blocking ineligible athletes and showing a friendly BaseCard prompt inside the form.",
+const cachingNotes = [
+	"Standings and the team list keep a fresh copy in memory for around 5–10 minutes, so moving between pages does not trigger constant reloads.",
+	"Team details, rosters, match history, and the All Tables view refresh roughly every 2 minutes or whenever you hit Refresh.",
+	"Match Entry remembers any roster it has already pulled during your visit, so switching between teams stays quick even on slower connections.",
+	"If a refresh fails, pages keep showing the last successful data and explain what to check next instead of leaving an empty screen.",
 ];
 
 function AboutPage() {
@@ -81,36 +83,31 @@ function AboutPage() {
 			title="About the Scoring System Demo"
 			description={
 				<>
-					A walk-through of how the scoring system behaves, who it
-					helps, and which tools power it.
-					<hr className="my-3 w-200 h-px bg-(--border-subtle) border-0" />
-					Scoring System Demo keeps standings, rosters, match sheets,
-					and database inspection tools inside one guided layout.
-					Every screen shares the same design language, so visitors
-					can move from checking scores to entering new ones without
-					relearning the page.
+					This demo shows how league staff can check scores, manage
+					rosters, and enter matches in one place without juggling
+					spreadsheets. Every page follows the same simple layout so
+					new visitors can move from reading results to adding them
+					with no training.
+					<hr className="my-3 w-150 h-px bg-(--border-subtle) border- not-md:w-75" />
+					Use this overview to see what each page does and how the app
+					keeps data fast and reliable behind the scenes.
 				</>
 			}
 			descriptionAs="div"
 			maxWidthClass="max-w-5xl"
 			paddingClass="px-6 md:px-10"
 		>
-			<BaseCard
-				title="What this solves"
-				description="League directors can review the latest results before planning broadcasts, captains can lock in lineups the moment play wraps, and volunteers can audit data without leaving the browser."
-			/>
-
 			<div className="grid gap-6 md:grid-cols-2">
 				<BaseCard
-					title="Page-by-page tour"
-					listItems={siteSections.map((section) => ({
+					title="Pages at a glance"
+					listItems={pageSummaries.map((section) => ({
 						title: section.title,
 						description: section.description,
 					}))}
 				/>
 				<BaseCard
-					title="Match Entry workflow"
-					description="The heaviest workflow lives on the Match Entry page, where captains record every detail from venue to game scores."
+					title="How Match Entry guides captains"
+					description="The busiest workflow lives on Match Entry. Here is how the page keeps things clear:"
 					listItems={matchEntryHighlights.map((item) => ({
 						description: item,
 					}))}
@@ -118,29 +115,21 @@ function AboutPage() {
 				/>
 			</div>
 
-			<BaseCard
-				title="Data + tooling"
-				description="Each feature leans on a compact but production-minded toolkit:"
-				listItems={dataPractices.map((tech) => ({
-					title: tech.name,
-					description: tech.description,
-				}))}
-				listColumns={2}
-			/>
-
 			<div className="grid gap-6 md:grid-cols-2">
 				<BaseCard
-					title="Capabilities on display"
-					listItems={capabilityHighlights.map((item) => ({
-						description: item,
+					title="Tools under the hood"
+					description="Lean choices that keep pages quick without adding extra steps for visitors:"
+					listItems={dataPractices.map((tech) => ({
+						title: tech.name,
+						description: tech.description,
 					}))}
-					listVariant="bullet"
+					listColumns={1}
 				/>
 
 				<BaseCard
-					title="MailChimp + RegistrationWorks integrations"
-					description="These integrations plug communication and registration tools straight into the existing PostgreSQL workflow:"
-					listItems={roadmap.map((item) => ({
+					title="How data stays smooth"
+					description="The app keeps recent results close at hand and falls back gracefully when the network slows down:"
+					listItems={cachingNotes.map((item) => ({
 						description: item,
 					}))}
 					listVariant="bullet"
