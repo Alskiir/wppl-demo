@@ -166,14 +166,37 @@ const parseNumber = (value: unknown): number | null => {
 	return null;
 };
 
+const normalizeTimeOffset = (time: string): string => {
+	if (!time) return time;
+	if (time.endsWith("Z")) return time;
+
+	const offsetMatch = time.match(/([+-]\d{2})(\d{2})?$/);
+	if (!offsetMatch) return time;
+
+	const [, hours, minutes] = offsetMatch;
+	return time.replace(offsetMatch[0], `${hours}:${minutes ?? "00"}`);
+};
+
 const parseDateTime = (
 	date: string | null,
 	time: string | null
 ): Date | null => {
 	if (!date) return null;
-	const dateTimeString = time ? `${date}T${time}` : date;
-	const parsed = new Date(dateTimeString);
-	return Number.isNaN(parsed.valueOf()) ? null : parsed;
+
+	// Supabase `timetz` values come back like "16:12:00+00", which isn't ISO
+	// friendly. Normalize the offset and try a couple of parse strategies.
+	if (time) {
+		const normalizedTime = normalizeTimeOffset(time);
+		const isoDateTimeString = `${date}T${normalizedTime}`;
+		const parsedIso = new Date(isoDateTimeString);
+		if (!Number.isNaN(parsedIso.valueOf())) return parsedIso;
+
+		const fallback = new Date(`${date} ${time}`);
+		if (!Number.isNaN(fallback.valueOf())) return fallback;
+	}
+
+	const parsedDateOnly = new Date(date);
+	return Number.isNaN(parsedDateOnly.valueOf()) ? null : parsedDateOnly;
 };
 
 const normalizeRelation = <T>(relation: T | T[] | null): T | null => {
@@ -187,6 +210,33 @@ const normalizeRelation = <T>(relation: T | T[] | null): T | null => {
 const normalizeToArray = <T>(relation: SupabaseRelation<T>): T[] => {
 	if (!relation) return [];
 	return Array.isArray(relation) ? relation : [relation];
+};
+
+const dedupeLinesByMatch = (
+	lines: NormalizedPlayerLine[]
+): NormalizedPlayerLine[] => {
+	const byMatch = new Map<string, NormalizedPlayerLine>();
+
+	for (const line of lines) {
+		const existing = byMatch.get(line.matchId);
+		if (!existing) {
+			byMatch.set(line.matchId, line);
+			continue;
+		}
+
+		// Prefer the earliest/primary line number for that match, and keep
+		// whichever entry has a usable matchDate if one is missing.
+		const existingLine = existing.lineNumber ?? Number.POSITIVE_INFINITY;
+		const currentLine = line.lineNumber ?? Number.POSITIVE_INFINITY;
+
+		if (!existing.matchDate && line.matchDate) {
+			byMatch.set(line.matchId, line);
+		} else if (currentLine < existingLine) {
+			byMatch.set(line.matchId, line);
+		}
+	}
+
+	return Array.from(byMatch.values());
 };
 
 export async function fetchPlayerBasics(
@@ -347,11 +397,13 @@ export async function fetchPlayerLines(
 		return [normalized];
 	});
 
-	return normalizedLines.sort((a, b) => {
+	const uniqueMatches = dedupeLinesByMatch(normalizedLines).sort((a, b) => {
 		const aTime = a.matchDate?.getTime() ?? 0;
 		const bTime = b.matchDate?.getTime() ?? 0;
 		return aTime - bTime;
 	});
+
+	return uniqueMatches;
 }
 
 const computeWinStreak = (lines: NormalizedPlayerLine[]) => {
