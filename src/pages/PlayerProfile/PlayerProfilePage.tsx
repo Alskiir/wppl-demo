@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Header, PageShell, Text } from "../../components";
+import { BaseCard, Header, PageShell, Text } from "../../components";
 import {
 	fetchPlayerComputedStats,
 	type PartnerStats,
@@ -8,6 +8,14 @@ import {
 } from "./api";
 
 const DEFAULT_PLAYER_ID = import.meta.env.VITE_DEFAULT_PLAYER_ID ?? "";
+const DEFAULT_PROFILE_COPY = {
+	role: "League player",
+	bio: "Player bio isn't available yet.",
+	coverImage:
+		"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+	avatarImage:
+		"https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=600&q=80",
+};
 
 type PlayerProfile = {
 	name: string;
@@ -36,72 +44,6 @@ type StatHighlight = {
 	value: string;
 	change: string;
 	trend: "up" | "down";
-};
-
-const FALLBACK_PROFILE: PlayerProfile = {
-	name: "Seth Cadler",
-	handle: "@sethcadler",
-	role: "Right-side Specialist",
-	team: "Evergreen Echoes",
-	location: "Florida, USA",
-	joined: "Joined 2022",
-	bio: "Relentless energy on the court and exceptional ability to read the game. Enjoys hiking and exploring new coffee shops.",
-	coverImage:
-		"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
-	avatarImage:
-		"https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=600&q=80",
-};
-
-const FALLBACK_QUICK_STATS: Stat[] = [
-	{ label: "Win percentage", value: "78%" },
-	{ label: "Win streak", value: "5 matches" },
-	{ label: "Total matches", value: "23 played" },
-];
-
-const FALLBACK_SOCIAL_STATS: Stat[] = [
-	{ label: "Games won", value: "18" },
-	{ label: "Games lost", value: "5" },
-	{ label: "Lines won / match", value: "2.3 avg" },
-];
-
-const FALLBACK_TREND: TrendPoint[] = [
-	{ label: "M-8", value: 4 },
-	{ label: "M-7", value: 6 },
-	{ label: "M-6", value: 3 },
-	{ label: "M-5", value: 8 },
-	{ label: "M-4", value: -1 },
-	{ label: "M-3", value: 5 },
-	{ label: "M-2", value: 2 },
-	{ label: "M-1", value: 7 },
-];
-
-const FALLBACK_HIGHLIGHTS: StatHighlight[] = [
-	{
-		label: "Average point differential",
-		value: "+4.3 pts",
-		change: "+1.1 vs last 8",
-		trend: "up",
-	},
-	{
-		label: "Games won vs lost",
-		value: "18 / 5",
-		change: "5 on current streak",
-		trend: "up",
-	},
-	{
-		label: "Lines won per match",
-		value: "2.3 avg",
-		change: "+0.2 vs season avg",
-		trend: "up",
-	},
-];
-
-const FALLBACK_PARTNER: PartnerStats = {
-	name: "Elias Rivera",
-	matches: 12,
-	wins: 9,
-	losses: 3,
-	winPct: 75,
 };
 
 type PlayerAvatarProps = {
@@ -512,23 +454,26 @@ function PlayerProfilePage() {
 	const playerId = searchParams.get("playerId") ?? DEFAULT_PLAYER_ID;
 	const [stats, setStats] = useState<PlayerComputedStats | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		let cancelled = false;
 		if (!playerId) {
 			setStats(null);
 			setError("Add ?playerId=<person id> to load real player data.");
+			setLoading(false);
 			return;
 		}
 
 		if (!isValidUuid(playerId)) {
 			setStats(null);
 			setError("Player id must be a valid UUID.");
+			setLoading(false);
 			return;
 		}
 
 		setLoading(true);
+		setStats(null);
 		setError(null);
 
 		fetchPlayerComputedStats(playerId)
@@ -558,23 +503,26 @@ function PlayerProfilePage() {
 		};
 	}, [playerId]);
 
-	const profile: PlayerProfile = useMemo(() => {
+	const profile: PlayerProfile | null = useMemo(() => {
 		if (!stats) {
-			return FALLBACK_PROFILE;
+			return null;
 		}
 
 		return {
-			...FALLBACK_PROFILE,
-			name: stats.basics.fullName || FALLBACK_PROFILE.name,
-			handle: stats.basics.handle || FALLBACK_PROFILE.handle,
-			team: stats.basics.teamName || FALLBACK_PROFILE.team,
-			location: stats.basics.teamLocation || FALLBACK_PROFILE.location,
-			joined: stats.basics.joinedLabel || FALLBACK_PROFILE.joined,
+			name: stats.basics.fullName,
+			handle: stats.basics.handle,
+			role: DEFAULT_PROFILE_COPY.role,
+			team: stats.basics.teamName,
+			location: stats.basics.teamLocation,
+			joined: stats.basics.joinedLabel,
+			bio: DEFAULT_PROFILE_COPY.bio,
+			coverImage: DEFAULT_PROFILE_COPY.coverImage,
+			avatarImage: DEFAULT_PROFILE_COPY.avatarImage,
 		};
 	}, [stats]);
 
 	const quickStats: Stat[] = useMemo(() => {
-		if (!stats) return FALLBACK_QUICK_STATS;
+		if (!stats) return [];
 		return [
 			{ label: "Win percentage", value: `${stats.winPercentage}%` },
 			{
@@ -588,7 +536,7 @@ function PlayerProfilePage() {
 	}, [stats]);
 
 	const socialStats: Stat[] = useMemo(() => {
-		if (!stats) return FALLBACK_SOCIAL_STATS;
+		if (!stats) return [];
 		return [
 			{ label: "Games won", value: `${stats.gamesWon}` },
 			{ label: "Games lost", value: `${stats.gamesLost}` },
@@ -599,13 +547,10 @@ function PlayerProfilePage() {
 		];
 	}, [stats]);
 
-	const trend: TrendPoint[] = useMemo(
-		() => (stats ? stats.trend : FALLBACK_TREND),
-		[stats]
-	);
+	const trend: TrendPoint[] = useMemo(() => stats?.trend ?? [], [stats]);
 
 	const statHighlights: StatHighlight[] = useMemo(() => {
-		if (!stats) return FALLBACK_HIGHLIGHTS;
+		if (!stats) return [];
 		return [
 			{
 				label: "Average point differential",
@@ -633,16 +578,29 @@ function PlayerProfilePage() {
 		];
 	}, [stats]);
 
-	const partner: PartnerStats | null = stats
-		? stats.partner
-		: FALLBACK_PARTNER;
+	const partner: PartnerStats | null = stats?.partner ?? null;
 
-	return (
-		<PageShell
-			title="Player Profile"
-			description="A snapshot showing a player's profile, stats, and performance trends."
-			maxWidthClass="max-w-6xl"
-		>
+	const hasStats = Boolean(stats);
+	const hasMatches = Boolean(stats && stats.totalMatches > 0);
+
+	let content = null;
+
+	if (error) {
+		content = (
+			<BaseCard
+				title="Unable to load player data"
+				description={error}
+				footer="Confirm the player id is valid and that Supabase credentials are set in .env."
+			/>
+		);
+	} else if (loading) {
+		content = <BaseCard description="Loading player data..." />;
+	} else if (!hasStats || !profile) {
+		content = (
+			<BaseCard description="Add ?playerId=<person id> to load player data." />
+		);
+	} else {
+		content = (
 			<div className="flex flex-col gap-6">
 				<ProfileHero
 					profile={profile}
@@ -650,21 +608,25 @@ function PlayerProfilePage() {
 					quickStats={quickStats}
 					partner={partner}
 				/>
-				{loading ? (
-					<div className="rounded-2xl border border-(--border-subtle) bg-(--surface-panel) p-6 text-(--text-muted)">
-						Loading player stats...
-					</div>
-				) : error ? (
-					<div className="rounded-2xl border border-(--border-subtle) bg-(--surface-panel) p-6 text-(--danger)">
-						{error}
-					</div>
-				) : (
+				{hasMatches ? (
 					<PlayerStatsGraph
 						trend={trend}
 						statHighlights={statHighlights}
 					/>
+				) : (
+					<BaseCard description="No match data recorded for this player yet." />
 				)}
 			</div>
+		);
+	}
+
+	return (
+		<PageShell
+			title="Player Profile"
+			description="A snapshot showing a player's profile, stats, and performance trends."
+			maxWidthClass="max-w-6xl"
+		>
+			{content}
 		</PageShell>
 	);
 }
