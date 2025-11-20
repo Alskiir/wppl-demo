@@ -515,9 +515,11 @@ function PlayerProfilePage() {
 			team: stats.basics.teamName,
 			location: stats.basics.teamLocation,
 			joined: stats.basics.joinedLabel,
-			bio: DEFAULT_PROFILE_COPY.bio,
-			coverImage: DEFAULT_PROFILE_COPY.coverImage,
-			avatarImage: DEFAULT_PROFILE_COPY.avatarImage,
+			bio: stats.basics.bio ?? DEFAULT_PROFILE_COPY.bio,
+			coverImage:
+				stats.basics.coverUrl ?? DEFAULT_PROFILE_COPY.coverImage,
+			avatarImage:
+				stats.basics.avatarUrl ?? DEFAULT_PROFILE_COPY.avatarImage,
 		};
 	}, [stats]);
 

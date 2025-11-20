@@ -83,6 +83,9 @@ type PlayerBasics = {
 	teamName: string;
 	teamLocation: string;
 	joinedLabel: string;
+	bio: string | null;
+	avatarUrl: string | null;
+	coverUrl: string | null;
 };
 
 export type PartnerStats = {
@@ -91,6 +94,13 @@ export type PartnerStats = {
 	wins: number;
 	losses: number;
 	winPct: number;
+};
+
+type PlayerProfileRow = {
+	handle: string | null;
+	bio: string | null;
+	avatar_url: string | null;
+	cover_url: string | null;
 };
 
 export type PlayerComputedStats = {
@@ -242,14 +252,24 @@ const dedupeLinesByMatch = (
 export async function fetchPlayerBasics(
 	playerId: string
 ): Promise<PlayerBasics> {
-	const person = await resolveSupabase<PersonRow>(
-		supabase
-			.from("person")
-			.select(PLAYER_BASICS_SELECTION)
-			.eq("id", playerId)
-			.single(),
-		{ errorMessage: "Unable to load player details." }
-	);
+	const [person, profile] = await Promise.all([
+		resolveSupabase<PersonRow>(
+			supabase
+				.from("person")
+				.select(PLAYER_BASICS_SELECTION)
+				.eq("id", playerId)
+				.single(),
+			{ errorMessage: "Unable to load player details." }
+		),
+		resolveSupabase<PlayerProfileRow | null>(
+			supabase
+				.from("player_profile")
+				.select("handle,bio,avatar_url,cover_url")
+				.eq("person_id", playerId)
+				.maybeSingle(),
+			{ allowNull: true, errorMessage: "Unable to load player profile." }
+		),
+	]);
 
 	const memberships = await resolveSupabase<TeamMembershipRow[]>(
 		supabase
@@ -265,16 +285,27 @@ export async function fetchPlayerBasics(
 	const team = membership ? normalizeRelation(membership.team) : null;
 	const fullName = formatFullName(person.first_name, person.last_name);
 	const preferred = person.preferred_name?.trim();
+	const profileHandle = profile?.handle?.trim();
+	const normalizedHandle = profileHandle
+		? profileHandle.startsWith("@")
+			? profileHandle
+			: `@${profileHandle}`
+		: preferred
+		? `@${preferred.toLowerCase()}`
+		: `@${person.id}`;
 
 	return {
 		playerId,
 		fullName,
-		handle: preferred ? `@${preferred.toLowerCase()}` : `@${person.id}`,
+		handle: normalizedHandle,
 		teamName: team?.name ?? "Independent player",
 		teamLocation: team?.location ?? "Location unknown",
 		joinedLabel: membership?.start_date
 			? `Joined ${new Date(membership.start_date).getFullYear()}`
 			: "Active",
+		bio: profile?.bio?.trim() || null,
+		avatarUrl: profile?.avatar_url || null,
+		coverUrl: profile?.cover_url || null,
 	};
 }
 
