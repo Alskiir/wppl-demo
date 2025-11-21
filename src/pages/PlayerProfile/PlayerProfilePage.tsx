@@ -10,7 +10,6 @@ import {
 const DEFAULT_PLAYER_ID = import.meta.env.VITE_DEFAULT_PLAYER_ID ?? "";
 const DEFAULT_PROFILE_COPY = {
 	role: "League player",
-	bio: "Player bio isn't available yet.",
 	coverImage:
 		"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
 	avatarImage:
@@ -24,7 +23,7 @@ type PlayerProfile = {
 	team: string;
 	location: string;
 	joined: string;
-	bio: string;
+	bio: string | null;
 	coverImage: string;
 	avatarImage: string;
 };
@@ -184,9 +183,15 @@ const ProfileHero = ({
 				</button>
 			</div>
 
-			<Text variant="body" size="md" className="mt-6 max-w-3xl">
-				{profile.bio}
-			</Text>
+			{profile.bio ? (
+				<Text variant="body" size="md" className="mt-6 max-w-3xl">
+					{profile.bio}
+				</Text>
+			) : (
+				<Text variant="subtle" size="sm" className="mt-6 max-w-3xl">
+					No bio available.
+				</Text>
+			)}
 
 			<div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-(--text-secondary)">
 				<span>{profile.location}</span>
@@ -515,7 +520,7 @@ function PlayerProfilePage() {
 			team: stats.basics.teamName,
 			location: stats.basics.teamLocation,
 			joined: stats.basics.joinedLabel,
-			bio: stats.basics.bio ?? DEFAULT_PROFILE_COPY.bio,
+			bio: stats.basics.bio,
 			coverImage:
 				stats.basics.coverUrl ?? DEFAULT_PROFILE_COPY.coverImage,
 			avatarImage:
