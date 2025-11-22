@@ -43,13 +43,13 @@ const routeMeta = defineRoutes({
 		component: MatchEntryPage,
 		label: "Match Entry",
 	},
-	"all-tables": {
-		component: AllTablesPage,
-		label: "All Tables",
-	},
 	"player-profile": {
 		component: PlayerProfilePage,
 		label: "Player Profile",
+	},
+	"all-tables": {
+		component: AllTablesPage,
+		label: "All Tables",
 	},
 	about: {
 		component: AboutPage,
