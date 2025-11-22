@@ -371,14 +371,14 @@ const PlayerStatsGraph = ({ trend, statHighlights }: PlayerStatsGraphProps) => {
 			<div className="flex flex-wrap items-start justify-between gap-4">
 				<div className="space-y-2">
 					<Text variant="eyebrowMuted" size="xs">
-						Player pulse
+						Performance overview
 					</Text>
 					<Header level={3} size="xl">
 						Point differential per match
 					</Header>
 					<Text variant="muted" size="sm">
-						Points for minus points against, across the most recent
-						recorded matches this player appeared in.
+						Point differential across the most recent matches
+						played.
 					</Text>
 				</div>
 				<div className="rounded-[18px] border border-(--border-highlight) bg-(--surface-raised) px-4 py-3 text-right shadow-(--md-sys-elevation-1)">
@@ -569,14 +569,14 @@ function PlayerProfilePage() {
 				label: "Average point differential",
 				value: `${formatSigned(stats.avgPointDifferential, " pts")}`,
 				change: stats.trend.length
-					? `Across last ${stats.trend.length} matches`
+					? `Across the last ${stats.trend.length} matches`
 					: "Across recorded matches",
 				trend: stats.avgPointDifferential >= 0 ? "up" : "down",
 			},
 			{
 				label: "Games won vs lost",
 				value: `${stats.gamesWon} / ${stats.gamesLost}`,
-				change: `${stats.winStreak} current, best ${stats.highestWinStreak}`,
+				change: `${stats.gamesWon + stats.gamesLost} total games`,
 				trend: stats.winStreak > 0 ? "up" : "down",
 			},
 			{
@@ -584,7 +584,7 @@ function PlayerProfilePage() {
 				value: `${stats.linesPerMatch.toFixed(2)} avg`,
 				change: formatSigned(
 					stats.linesPerMatch - 1,
-					" vs neutral 1.0"
+					" vs league average"
 				),
 				trend: stats.linesPerMatch >= 1 ? "up" : "down",
 			},
